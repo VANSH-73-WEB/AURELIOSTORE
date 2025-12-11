@@ -2,11 +2,7 @@
 const Navbar = () => {
   return (
    <div className="relative flex">
-  <img
-    className="w-full h-[500px] object-cover  rounded-b-2xl shadow-lg mx-auto"
-    src="https://i.pinimg.com/736x/64/f6/53/64f6537904d62276655df3fdf16bb5e5.jpg"
-    alt="banner"
-  />
+  
   <div className="absolute top-0 left-0 w-full h-20  items-center">
    <div className="bg-blue-950/70 backdrop-blur-md mx-40 h-full rounded-b-2xl flex items-center shadow-lg">
     <img src="src/AURILEOSTORE.png" alt=""  className="w-20 h-auto relative text-white"/>
@@ -18,10 +14,14 @@ const Navbar = () => {
   <h5 className="font-raleway font-thin text-white">Blog</h5>
   <h5 className="font-raleway font-thin text-white">Home</h5>
 </div>
-<i class="ri-search-line"></i>
+<div className="flex flex-row space-x-10 ml-80">
+  <i class="ri-search-line text-2xl text-white text-shadow-cyan-950"></i>
+  <i class="ri-shopping-cart-fill text-2xl text-white"></i>
+  <i class="ri-circle-fill text-3xl text-white"></i>
+</div>
 
    </div>
-    <h1 className="text-white font-raleway relative top-15 font-[400px] text-[300px] flex justify-center tracking-[0.15em] ">Shop</h1>
+    
 </div>
 </div>
 )
