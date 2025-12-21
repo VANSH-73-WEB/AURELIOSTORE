@@ -1,30 +1,36 @@
-
 const Navbar = () => {
   return (
-   <div className="relative flex">
-  
-  <div className="absolute top-0 left-0 w-full h-20  items-center">
-   <div className="bg-blue-950/70 backdrop-blur-md mx-40 h-full rounded-b-2xl flex items-center shadow-lg">
-    <img src="src/AURILEOSTORE.png" alt=""  className="w-20 h-auto relative text-white"/>
-      <h1 className="font-raleway text-2xl font-thin tracking-[0.3em] uppercase text-white">
-       AURELIO STORE
-    </h1>
-   <div className="flex flex-row space-x-6 ml-50">
-  <h5 className="font-raleway font-thin text-white">Shop</h5>
-  <h5 className="font-raleway font-thin text-white">Blog</h5>
-  <h5 className="font-raleway font-thin text-white">Home</h5>
-</div>
-<div className="flex flex-row space-x-10 ml-80">
-  <i class="ri-search-line text-2xl text-white text-shadow-cyan-950"></i>
-  <i class="ri-shopping-cart-fill text-2xl text-white"></i>
-  <i class="ri-circle-fill text-3xl text-white"></i>
-</div>
+    <nav className="fixed top-0 left-0 w-full z-50">
+      <div className="bg-blue-950/70 backdrop-blur-md mx-40 h-20 rounded-b-2xl flex items-center shadow-lg px-6">
+        
+        {/* Logo */}
+        <img
+          src="src/AURILEOSTORE.png"
+          alt="Aurelio Store"
+          className="w-20 h-auto"
+        />
 
-   </div>
-    
-</div>
-</div>
-)
-}
+        <h1 className="ml-4 font-raleway text-2xl font-thin tracking-[0.3em] uppercase text-white">
+          AURELIO STORE
+        </h1>
 
-export default Navbar
+        {/* Menu */}
+        <div className="flex space-x-6 ml-auto">
+          <h5 className="font-raleway font-thin text-white cursor-pointer">Home</h5>
+          <h5 className="font-raleway font-thin text-white cursor-pointer">Shop</h5>
+          <h5 className="font-raleway font-thin text-white cursor-pointer">Blog</h5>
+        </div>
+
+        {/* Icons */}
+        <div className="flex space-x-6 ml-10">
+          <i className="ri-search-line text-2xl text-white"></i>
+          <i className="ri-shopping-cart-fill text-2xl text-white"></i>
+          <i className="ri-circle-fill text-3xl text-white"></i>
+        </div>
+
+      </div>
+    </nav>
+  );
+};
+
+export default Navbar;
