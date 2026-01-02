@@ -1,0 +1,22 @@
+import { products } from "../../data/produts";
+
+
+const Product = () => {
+  return (
+    <div className="absolute left-100 top-130">
+      {products.map((item) => (
+        <div key={item.id} className="product-card ">
+          <img src={item.image} alt={item.name} className="w-70 h-70 rounded-2xl"/>
+
+          <h3 className="font-semibold text-2xl">{item.name}</h3>
+          <p>{item.price}</p>
+<div className="flex justify-between">
+          <button className="w-30 h-10 font-semibold rounded-3xl  border border-gray-300 cursor-pointer" >Add to Cart</button>
+          <button className="w-30 h-10 font-semibold rounded-3xl  border border-gray-300 bg-black text-white cursor-pointer" >Buy Now</button></div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Product;

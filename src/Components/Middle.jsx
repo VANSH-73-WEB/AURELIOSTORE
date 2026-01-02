@@ -9,13 +9,13 @@ const Middle = () => {
     alt="banner"
   />
 
-  <h1 className="absolute bg-gradient-to-t from-red-500 to-blue-500 bg-clip-text text-transparent font-raleway font-normal text-[300px] tracking-[0.15em]">
+  <h1 className="absolute top-11 bg-linear-to-t from-red-500 to-blue-500 bg-clip-text text-transparent font-raleway font-normal text-[300px] tracking-[0.15em]">
    Shop
  </h1>
  <div className=" absolute w-7xl h-50 bg-white rounded-tl-2xl rounded-tr-2xl
     top-100 flex
     ">
-<h1 className="font-raleway font-bold text-4xl ml-3 mt-3 ">Give All You Need</h1>
+<h1 className="font-raleway  text-4xl ml-3 mt-3 ">Give All You Need</h1>
 
  <div className="absolute top-5 right-5">
        <input 

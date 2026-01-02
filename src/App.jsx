@@ -1,12 +1,12 @@
 import Navbar from "./Components/Navbar"
 import Middle from "./Components/middle"
-import Bottom from "./Components/Bottom"
+import Product from "./Components/Bottom/Product"
 const App = () => {
   return (
     <div className="relative">
       <Navbar />
       <Middle />
-      <Bottom />
+      <Product/>
     </div>
   )
 }
