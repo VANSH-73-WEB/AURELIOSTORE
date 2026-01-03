@@ -3,7 +3,7 @@ import { products } from "../../data/produts";
 
 const Product = () => {
   return (
-    <div className="absolute left-100 top-130">
+    <div className="absolute left-100 top-130 grid grid-cols-3 gap-5">
       {products.map((item) => (
         <div key={item.id} className="product-card ">
           <img src={item.image} alt={item.name} className="w-70 h-70 rounded-2xl"/>
