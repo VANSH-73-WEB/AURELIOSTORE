@@ -1,8 +1,9 @@
-const Navbar = ({ cart, setShowCart }) => {
-   console.log(cart);
+import {useNavigate} from "react-router-dom";
+const Navbar = ({ cart }) => {
+  const navigate=useNavigate();
   return (
     
-    <nav className="fixed top-0 left-0 w-full z-50">
+    <nav className="absolute top-0 left-0 w-full z-50" >
       
 
       <div className="bg-blue-950/70 backdrop-blur-md mx-40 h-20 rounded-b-2xl flex items-center shadow-lg px-6">
@@ -30,7 +31,7 @@ const Navbar = ({ cart, setShowCart }) => {
           <i className="ri-search-line text-2xl text-white cursor-pointer"></i>
        <div
   className="relative flex items-center cursor-pointer"
-  onClick={() => setShowCart(prev => !prev)}
+  onClick={() => navigate('/cart')}
 >
   <i className="ri-shopping-cart-fill text-2xl text-white"></i>
 

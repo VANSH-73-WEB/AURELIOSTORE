@@ -5,7 +5,7 @@ const Cart = ({ cart, setCart }) => {
   };
 
   return (
-    <div>
+    <div className="absolute">
       <h2>Cart</h2>
 
       {cart.length === 0 && <p>Cart is empty</p>}

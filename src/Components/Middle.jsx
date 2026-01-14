@@ -2,7 +2,7 @@
 const Middle = () => {
   return (
     
-  <div className="relative flex justify-center items-center">
+  <div className=" flex justify-center items-center">
   <img
     className="w-full h-[500px]  shadow-lg"
     src="https://i.pinimg.com/1200x/ea/c5/d0/eac5d0031ac7f7f745ac1f21ba73a7e7.jpg"
@@ -12,7 +12,7 @@ const Middle = () => {
   <h1 className="absolute top-11 bg-linear-to-t from-red-500 to-blue-500 bg-clip-text text-transparent font-raleway font-normal text-[300px] tracking-[0.15em]">
    Shop
  </h1>
- <div className=" absolute w-7xl h-50 bg-white rounded-tl-2xl rounded-tr-2xl
+ <div className=" absolute w-7xl h-30 bg-white rounded-tl-2xl rounded-tr-2xl
     top-100 flex
     ">
 <h1 className="font-raleway  text-4xl ml-3 mt-3 ">Give All You Need</h1>
