@@ -19,9 +19,9 @@ const Product = ({ cart, setCart }) => {
   };
 
   return (
-    <section className="mt-24 px-20">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
-  {/* // <div className="mt-20 grid grid-cols-3 gap-1 ml-70"> */}
+    <section className=" px-20">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"> */}
+   <div className="mt-20 grid grid-cols-3 gap-1 ml-70"> 
 
 
       {products.map((item) => (
@@ -29,7 +29,7 @@ const Product = ({ cart, setCart }) => {
           <img
             src={item.image}
             alt={item.name}
-            className="w-70 h-70 rounded-2xl"
+            className="w-81 h-70 rounded-2xl"
           />
 
           <h3 className="font-semibold text-2xl">{item.name}</h3>

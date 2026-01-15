@@ -3,7 +3,7 @@ const Navbar = ({ cart }) => {
   const navigate=useNavigate();
   return (
     
-    <nav className="absolute top-0 left-0 w-full z-50" >
+    <nav className="fixed top-0 left-0 w-full z-50" >
       
 
       <div className="bg-blue-950/70 backdrop-blur-md mx-40 h-20 rounded-b-2xl flex items-center shadow-lg px-6">
