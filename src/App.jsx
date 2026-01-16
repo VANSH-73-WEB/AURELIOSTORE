@@ -5,6 +5,7 @@ import Cart from "./Components/Bottom/Cart";
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
+import Notfound from "./Components/Notfound";
 
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -15,7 +16,7 @@ const App = () => {
       <Navbar cart={cart} />
 
       {/* Main content */}
-      <main className="flex-grow ">
+      <main >
         <Routes>
           <Route
             path="/"
@@ -31,6 +32,8 @@ const App = () => {
             path="/cart"
             element={<Cart cart={cart} setCart={setCart} />}
           />
+        <Route path="*" element={<Notfound />} />
+
         </Routes>
       </main>
 
