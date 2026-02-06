@@ -9,11 +9,11 @@ const Cart = ({ cart, setCart }) => {
   Your Cart
 </h2>
 
-<div className="grid grid-cols-4 bg-gray-400 mb-4 font-bold rounded-2xl px-5 py-2 w-240">
-  <h1>Product</h1>
-  <h1>Price</h1>
-  <h1>Quantity</h1>
-  <h1>Subtotal</h1>
+<div className="grid grid-cols-5 bg-gray-400 mb-4 font-bold rounded-2xl px-5 py-2 w-240">
+  <h1 className="text-center">Product</h1>
+  <h1 className="text-center">Price</h1>
+  <h1 className="text-center">Quantity</h1>
+  <h1 className="text-center">Subtotal</h1>
 </div>
 
       {cart.length === 0 ? (
@@ -23,30 +23,35 @@ const Cart = ({ cart, setCart }) => {
         </div>
       ) : (
         cart.map(item => (
-<div key={item.id} className="grid grid-cols-4 mb-4 font-bold rounded-2xl px-5 py-2 w-240">
-   <div className="flex items-center gap-3">
-    <img src={item.image} className="w-12 h-12 rounded" />
-    <span className="font-medium">{item.name}</span>
-  </div>
-  
-  <h1>₹{item.price}</h1>
-  <h1>{item.qty}</h1>
-  <h1>₹{item.price * item.qty}</h1>
-          <button onClick={() => removeFromCart(item.id)}>
-              
-           </button>
-</div>
-          
+ <div
+    key={item.id}
+    className="grid grid-cols-5 items-center mb-5 font-bold rounded-2xl px-5 py-2 w-240"
+  >
+    {/* Product */}
+    <div className="flex items-center gap-4">
+      <img src={item.image} className="w-12 h-12 rounded" />
+      <span className="font-medium truncate">{item.name}</span>
+    </div>
 
-          
-  // <div key={item.id} className="mb-4">
-  //           <h4>{item.name}</h4>
-  //           <p>₹{item.price}</p>
-  //           <p>Qty: {item.qty}</p>
-  //           <button onClick={() => removeFromCart(item.id)}>
-  //             Remove
-  //           </button>
-  //         </div>
+    {/* Price */}
+    <h1 className="text-center">₹{item.price}</h1>
+
+    {/* Quantity */}
+    <h1 className="text-center">{item.qty}</h1>
+
+    {/* Total */}
+    <h1 className="text-center">₹{item.price * item.qty}</h1>
+
+    {/* Delete */}
+    <div className="flex justify-center">
+      <button
+        onClick={() => removeFromCart(item.id)}
+        className="text-red-500 hover:text-red-600"
+      >
+        <i className="ri-delete-bin-7-fill text-xl"></i>
+      </button>
+    </div>
+  </div>
         ))
       )}
     </div>
@@ -54,3 +59,25 @@ const Cart = ({ cart, setCart }) => {
 };
 
 export default Cart;
+
+
+// <div
+//   key={item.id}
+//   className="grid grid-cols-5 items-center mb-5 font-bold rounded-2xl px-5 py-2 w-full bg-gray-100"
+// >
+//   <div className="flex items-center gap-6">
+//     <img src={item.image} className="w-12 h-12 rounded" />
+//     <span className="font-medium">{item.name}</span>
+//   </div>
+
+//   <h1>₹{item.price}</h1>
+//   <h1>{item.qty}</h1>
+//   <h1>₹{item.price * item.qty}</h1>
+
+//   <button
+//     onClick={() => removeFromCart(item.id)}
+//     className="w-10 bg-red-500 text-white px-1 py-1 rounded hover:bg-red-600"
+//   >
+//     <i className="ri-delete-bin-7-fill"></i>
+//   </button>
+// </div>
