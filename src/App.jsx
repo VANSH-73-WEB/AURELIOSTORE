@@ -6,15 +6,20 @@ import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
 import Notfound from "./Components/Notfound";
-
+import { useRef } from "react";
 const App = () => {
   const [cart, setCart] = useState([]);
+  
 
+  const searchInputRef = useRef(null);
+
+  const focusSearch = () => {
+    searchInputRef.current?.focus();
+  };
   return (
     <div className="min-h-screen flex flex-col">
       {/* Navbar */}
-      <Navbar cart={cart} />
-
+      <Navbar cart={cart} focusSearch={focusSearch} />
       {/* Main content */}
       <main >
         <Routes>
@@ -22,7 +27,7 @@ const App = () => {
             path="/"
             element={
               <>
-                <Middle />
+                <Middle searchInputRef={searchInputRef} />
                 <Product cart={cart} setCart={setCart} />
               </>
             }

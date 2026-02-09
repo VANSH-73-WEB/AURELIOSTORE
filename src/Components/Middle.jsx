@@ -1,5 +1,7 @@
 
-const Middle = () => {
+const Middle = (
+  {searchInputRef }) => {
+  
   return (
     
   <div className=" flex justify-center items-center">
@@ -17,13 +19,14 @@ const Middle = () => {
     ">
 <h1 className="font-raleway  text-4xl ml-3 mt-3 ">Give All You Need</h1>
 
- <div className="absolute top-5 right-5">
-       <input 
+ <div className="absolute top-5 right-5   cursor-pointer">
+       <input autoFocus
+       ref={searchInputRef}
        className="bg-white  w-[430px] h-[45px] text-gray-600 rounded-full border border-gray-300 outline-none pl-10 pr-28  " 
        placeholder="Search on Aurileo" />
         <i className="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
        
-        <button type="submit" className="absolute right-1 top-1/2 -translate-y-1/2 bg-black text-white px-6 py-2 rounded-full cursor-pointer">Search</button>
+        <button  type="submit" className="absolute right-1 top-1/2 -translate-y-1/2 bg-black text-white px-6 py-2 rounded-full cursor-pointer">Search</button>
  </div>
 </div>
        </div>

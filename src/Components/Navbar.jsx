@@ -1,5 +1,5 @@
 import {useNavigate} from "react-router-dom";
-const Navbar = ({ cart }) => {
+const Navbar = ({ cart , focusSearch}) => {
   const navigate=useNavigate();
   return (
     
@@ -21,14 +21,14 @@ const Navbar = ({ cart }) => {
 
         
         <div className="flex space-x-6 ml-auto">
-          <h5 className="font-raleway font-thin text-white cursor-pointer">Home</h5>
+          <h5 onClick={()=> navigate('/')} className="font-raleway font-thin text-white cursor-pointer">Home</h5>
           <h5 className="font-raleway font-thin text-white cursor-pointer">Shop</h5>
           <h5 className="font-raleway font-thin text-white cursor-pointer">Blog</h5>
         </div>
 
         
         <div className="flex space-x-6 ml-10">
-          <i className="ri-search-line text-2xl text-white cursor-pointer"></i>
+          <i   onClick={focusSearch} className="ri-search-line text-2xl text-white cursor-pointer"></i>
        <div
   className="relative flex items-center cursor-pointer"
   onClick={() => navigate('/cart')}
