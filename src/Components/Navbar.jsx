@@ -1,4 +1,6 @@
 import {useNavigate} from "react-router-dom";
+import { Link } from "react-router-dom";
+
 const Navbar = ({ cart , focusSearch}) => {
   const navigate=useNavigate();
   return (
@@ -19,15 +21,31 @@ const Navbar = ({ cart , focusSearch}) => {
           AURELIO STORE
         </h1>
 
-        
-        <div className="flex space-x-6 ml-auto">
-          <h5 onClick={()=> navigate('/')} className="font-raleway font-thin text-white cursor-pointer">Home</h5>
-          <h5 className="font-raleway font-thin text-white cursor-pointer">Shop</h5>
-          <h5 className="font-raleway font-thin text-white cursor-pointer">Blog</h5>
-        </div>
+        <div className="flex space-x-6 ml-42">
+  <Link
+    to="/"
+    className="font-raleway font-thin text-white cursor-pointer hover:text-gray-300"
+  >
+    Home
+  </Link>
+
+  <Link
+    to="/shop"
+    className="font-raleway font-thin text-white cursor-pointer hover:text-gray-300"
+  >
+    Shop
+  </Link>
+
+  <Link
+    to="/blog"
+    className="font-raleway font-thin text-white cursor-pointer hover:text-gray-300"
+  >
+    Brand
+  </Link>
+</div>
 
         
-        <div className="flex space-x-6 ml-10">
+        <div className="flex space-x-6 ml-82">
           <i   onClick={focusSearch} className="ri-search-line text-2xl text-white cursor-pointer"></i>
        <div
   className="relative flex items-center cursor-pointer"
@@ -47,8 +65,6 @@ shadow-md">
 </span>
   )}
 </div>
-
-
           <i className="ri-circle-fill text-3xl text-white cursor-pointer"></i>
         </div>
 

@@ -1,4 +1,5 @@
 import { products } from "../../data/produts";
+import { useState } from "react";
 
 const Product = ({ cart, setCart }) => {
 
@@ -18,14 +19,22 @@ const Product = ({ cart, setCart }) => {
     }
   };
 
+const [currentPage, setCurrentPage] = useState(1);
+const productsPerPage = 12;
+const indexOfLastProduct = currentPage * productsPerPage;
+const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+
+const totalPages = Math.ceil(products.length / productsPerPage);
   return (
     <section className=" px-20">
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"> */}
+     
    <div className="mt-20 grid grid-cols-3 gap-1 ml-70"> 
 
 
-      {products.map((item) => (
+      {currentProducts.map((item) => (
         <div key={item.id} className="product-card bg-white rounded-3xl p-4 shadow-sm hover:shadow-lg transition">
+
           <img
             src={item.image}
             alt={item.name}
@@ -50,6 +59,38 @@ const Product = ({ cart, setCart }) => {
         </div>
       ))}
     </div>
+    <div className="flex justify-center gap-3 mt-10">
+  <button
+    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+    className="px-4 py-2 border rounded"
+  >
+    Prev
+  </button>
+
+  {Array.from({ length: totalPages }, (_, i) => (
+    <button
+      key={i}
+      onClick={() => setCurrentPage(i + 1)}
+      className={`w-8 h-8 rounded ${
+        currentPage === i + 1
+          ? "bg-black text-white"
+          : "bg-gray-200"
+      }`}
+    >
+      {i + 1}
+    </button>
+  ))}
+
+  <button
+    onClick={() =>
+      setCurrentPage(prev => Math.min(prev + 1, totalPages))
+    }
+    className="px-4 py-2 border rounded"
+  >
+    Next
+  </button>
+</div>
+
     </section>
   );
 };
