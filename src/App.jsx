@@ -6,6 +6,8 @@ import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
 import Notfound from "./Components/Notfound";
+import Login from "./Components/Login";
+
 import { useRef } from "react";
 const App = () => {
   const [cart, setCart] = useState([]);
@@ -38,6 +40,7 @@ const App = () => {
             element={<Cart cart={cart} setCart={setCart} />}
           />
         <Route path="*" element={<Notfound />} />
+            <Route path="/login" element={<Login />} />
 
         </Routes>
       </main>
