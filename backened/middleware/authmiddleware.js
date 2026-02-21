@@ -1,5 +1,9 @@
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import process from "node:process";
+
+dotenv.config();
 
 export const protect = async (req, res, next) => {
   try{
