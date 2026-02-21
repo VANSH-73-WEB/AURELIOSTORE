@@ -39,8 +39,9 @@ const App = () => {
             path="/cart"
             element={<Cart cart={cart} setCart={setCart} />}
           />
+        <Route path="/login" element={<Login />} />
         <Route path="*" element={<Notfound />} />
-            <Route path="/login" element={<Login />} />
+            
 
         </Routes>
       </main>
