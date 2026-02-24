@@ -3,6 +3,7 @@ import Middle from "./Components/Middle";
 import Product from "./Components/Bottom/Product";
 import Cart from "./Components/Bottom/Cart";
 import { useState } from "react";
+import { useLocation } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
 import Notfound from "./Components/Notfound";
@@ -11,45 +12,47 @@ import Login from "./Components/Login";
 import { useRef } from "react";
 const App = () => {
   const [cart, setCart] = useState([]);
-  
+  const location = useLocation();
+const hideLayout = location.pathname === "/";
 
   const searchInputRef = useRef(null);
 
   const focusSearch = () => {
     searchInputRef.current?.focus();
   };
-  return (
-    <div className="min-h-screen flex flex-col">
-      {/* Navbar */}
-      <Navbar cart={cart} focusSearch={focusSearch} />
-      {/* Main content */}
-      <main >
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <>
-                <Middle searchInputRef={searchInputRef} />
-                <Product cart={cart} setCart={setCart} />
-              </>
-            }
-          />
+ return (
+  <div className="min-h-screen flex flex-col">
 
-          <Route
-            path="/cart"
-            element={<Cart cart={cart} setCart={setCart} />}
-          />
-        <Route path="/login" element={<Login />} />
+    {/* Show Navbar only if NOT login */}
+    {!hideLayout && <Navbar cart={cart} focusSearch={focusSearch} />}
+
+    <main className="flex-grow">
+      <Routes>
+        <Route path="/" element={<Login />} />
+
+        <Route
+          path="/home"
+          element={
+            <>
+              <Middle searchInputRef={searchInputRef} />
+              <Product cart={cart} setCart={setCart} />
+            </>
+          }
+        />
+
+        <Route
+          path="/cart"
+          element={<Cart cart={cart} setCart={setCart} />}
+        />
+
         <Route path="*" element={<Notfound />} />
-            
+      </Routes>
+    </main>
 
-        </Routes>
-      </main>
-
-      {/* Footer */}
-      <Footer />
-    </div>
-  );
+    {/* Show Footer only if NOT login */}
+    {!hideLayout && <Footer />}
+  </div>
+);
 };
 
 export default App;

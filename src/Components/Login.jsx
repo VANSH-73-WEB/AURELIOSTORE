@@ -1,44 +1,89 @@
-import { useState } from "react";
-import { loginUser } from "../services/authService";
+import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 const Login = () => {
-  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: ""
+  });
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
 
-  const submitHandler = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-
-    try {
-      const data = await loginUser({ email, password });
-
-      // 🔥 STORE USER AFTER SUCCESSFUL LOGIN
-      localStorage.setItem("userInfo", JSON.stringify(data));
-
-      navigate("/"); // redirect to home
-    } catch (error) {
-    alert(error.response?.data?.message || "Login Failed");
-  }
+    console.log(formData);
   };
 
   return (
-    <form onSubmit={submitHandler}>
-      <input
-        type="email"
-        placeholder="Email"
-        onChange={(e) => setEmail(e.target.value)}
-      />
+    <div className="min-h-screen bg-gradient-to-br from-teal-700 to-teal-900 flex items-center justify-center relative">
 
-      <input
-        type="password"
-        placeholder="Password"
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      {/* Top Navigation */}
+      <div className="absolute top-6 left-6 text-white cursor-pointer">
+        ← Back to store
+      </div>
 
-      <button type="submit">Login</button>
-    </form>
+      <div className="absolute top-6 right-6 text-white">
+        Not a member?{" "}
+        <span className="border px-3 py-1 rounded cursor-pointer hover:bg-white hover:text-teal-800 transition">
+          Sign Up
+        </span>
+      </div>
+
+      {/* Login Card */}
+      <div className="bg-white/10 backdrop-blur-md p-10 rounded-lg w-[350px] shadow-lg text-white">
+
+        {/* Logo */}
+        <div className="flex justify-center mb-8">
+          <div className="w-10 h-10 bg-white clip-path-custom"></div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-6">
+
+          {/* Email */}
+          <div>
+            <label className="block text-sm mb-2">EMAIL ADDRESS</label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              placeholder="demo@modonotebooks.com"
+              className="w-full bg-transparent border-b border-gray-300 focus:outline-none focus:border-white py-2"
+              required
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm mb-2">PASSWORD</label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              placeholder="********"
+              className="w-full bg-transparent border-b border-gray-300 focus:outline-none focus:border-white py-2"
+              required
+            />
+          </div>
+
+          {/* Button */}
+          <button
+            type="submit"
+            className="w-full bg-white text-teal-800 py-2 rounded mt-4 hover:bg-gray-200 transition"
+          >
+            Login
+          </button>
+
+        </form>
+      </div>
+    </div>
   );
 };
 
