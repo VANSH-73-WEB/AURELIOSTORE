@@ -3,10 +3,12 @@ import { useNavigate } from "react-router-dom";
 
 
 const Login = () => {
-  const [formData, setFormData] = useState({
+ const navigate = useNavigate();
+ const [formData, setFormData] = useState({
     email: "",
     password: ""
   });
+  const [error, setError] = useState("");
 
   const handleChange = (e) => {
     setFormData({
@@ -15,9 +17,38 @@ const Login = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+      setError("");
+       console.log("Form Submitted");  
+  
+
+  try{
+    const response = await fetch("http://localhost:5000/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(formData)
+    });
+
+   
+      const data = await response.json();
+
+      if (response.ok) {
+        // If using JWT token
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
+
+        navigate("/home");
+      } else {
+        setError(data.message || "Login failed");
+      }
+
+    } catch (err) {
+      setError("Server error. Try again later.");
+    }
   };
 
   return (
@@ -76,6 +107,7 @@ const Login = () => {
           {/* Button */}
           <button
             type="submit"
+            onClick={handleSubmit}
             className="w-full bg-white text-teal-800 py-2 rounded mt-4 hover:bg-gray-200 transition"
           >
             Login
