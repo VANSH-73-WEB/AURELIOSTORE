@@ -55,13 +55,16 @@ const Login = () => {
     <div className="min-h-screen bg-gradient-to-br from-teal-700 to-teal-900 flex items-center justify-center relative">
 
       {/* Top Navigation */}
-      <div className="absolute top-6 left-6 text-white cursor-pointer">
-        ← Back to store
-      </div>
+     <div
+  className="absolute top-6 left-6 text-white cursor-pointer"
+  onClick={() => navigate("/")}
+>
+  ← Back to store
+</div>
 
       <div className="absolute top-6 right-6 text-white">
         Not a member?{" "}
-        <span className="border px-3 py-1 rounded cursor-pointer hover:bg-white hover:text-teal-800 transition">
+        <span className="border px-3 py-1 rounded cursor-pointer hover:bg-white hover:text-teal-800 transition " onClick={() => navigate("/register")}>
           Sign Up
         </span>
       </div>

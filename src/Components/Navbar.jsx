@@ -21,7 +21,7 @@ const Navbar = ({ cart, focusSearch }) => {
         </h1>
 
         <div className="flex space-x-6 ml-42">
-          <Link to="/" className="text-white hover:text-gray-300">Home</Link>
+          <Link to="/home" className="text-white hover:text-gray-300">Home</Link>
           <Link to="/shop" className="text-white hover:text-gray-300">Shop</Link>
           <Link to="/blog" className="text-white hover:text-gray-300">Brand</Link>
         </div>
@@ -51,7 +51,7 @@ const Navbar = ({ cart, focusSearch }) => {
           {/* 👤 USER SECTION */}
           {userInfo ? (
             <div className="relative group cursor-pointer">
-              <span className="text-white">{userInfo.name}</span>
+              <span className="text-black">{userInfo.name}</span>
 
               <div className="absolute right-0 hidden group-hover:block bg-white text-black p-3 rounded shadow-lg">
                 <p
@@ -68,7 +68,7 @@ const Navbar = ({ cart, focusSearch }) => {
           ) : (
             <i
               className="ri-circle-fill text-3xl text-white cursor-pointer"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate("/Login")}
             ></i>
           )}
         </div>

@@ -8,6 +8,7 @@ import { Routes, Route } from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
 import Notfound from "./Components/Notfound";
 import Login from "./Components/Login";
+import Register from "./Components/register";
 
 import { useRef } from "react";
 const App = () => {
@@ -29,7 +30,7 @@ const hideLayout = location.pathname === "/";
     <main className="flex-grow">
       <Routes>
         <Route path="/" element={<Login />} />
-
+  <Route path="/register" element={<Register />} />
         <Route
           path="/home"
           element={
