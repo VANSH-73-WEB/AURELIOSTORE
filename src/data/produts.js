@@ -99,81 +99,81 @@ export const products= [
 },
 {
   id:13,
-  name:"Headphones",
+  name:"JBL Tune 750BTNC",
   price:120.0,
   rating: 4,
   reviews: 52,
-  image: "https://i.pinimg.com/1200x/a3/2e/88/a32e884ab14a818538aeec295113abbf.jpg"
+  image: "https://i.pinimg.com/1200x/57/71/2f/57712f7c1014b09b3a76437adb471a98.jpg"
 },
 {
   id:14,
-  name:"Headphones",
+  name:"Boat Airdopes 441",
   price:120.0,
   rating: 4,
   reviews: 52,
-  image: "https://i.pinimg.com/736x/b0/5c/c9/b05cc9b376288e5ef425dce48faa0f57.jpg"
+  image: "https://i.pinimg.com/736x/7f/86/32/7f863225b1359f7427b741e303de7a31.jpg"
 },
 {
   id:15,
-  name:"Headphones",
+  name:"AirPods max",
   price:120.0,
   rating: 4,
   reviews: 52,
-  image: "https://i.pinimg.com/736x/e2/f6/99/e2f699da8e92b3caa87d513ba46e45e4.jpg"
+  image: "https://i.pinimg.com/736x/f0/46/34/f046340c3e9fa0a558aa6efff32accb0.jpg"
 },
  {
     id: 16,
     name: "Phone Holder Sakti",
     price: 29.9,
-    image: "https://via.placeholder.com/300?text=Phone+Holder",
+    image: "https://i.pinimg.com/736x/51/32/e3/5132e35f82fdb47c3aff447b728b3891.jpg",
   },
   {
     id: 17,
-    name: "Headsound",
+    name: "SONY WH-1000XM6",
     price: 12.0,
-    image: "https://via.placeholder.com/300?text=Headphones",
+    image: "https://i.pinimg.com/736x/39/48/ef/3948efa684a8b70aa45d9ab7de99f2bb.jpg",
   },
   {
     id: 18,
     name: "Adudu Cleaner",
     price: 29.9,
-    image: "https://via.placeholder.com/300?text=Cleaner",
+    image: "https://i.pinimg.com/736x/e2/c8/8e/e2c88e9a6375667546ac838057938b2e.jpg",
   },
   {
     id: 19,
-    name: "CCTV Maling",
+    name: "Airpods Pro 2",
     price: 50.0,
-    image: "https://via.placeholder.com/300?text=CCTV",
+    image: "https://i.pinimg.com/736x/31/da/8f/31da8f40bd70507cc1b21a0fde44b8bf.jpg",
   },
   {
     id: 20,
-    name: "Stufus Peker 32",
+    name: "Marshall Emberton III Portable Bluetooth Speakers",
     price: 9.9,
-    image: "https://via.placeholder.com/300?text=Device+32",
+    image: "https://i.pinimg.com/736x/52/c3/89/52c3895bbe13b2fe0bd3002398d37c5a.jpg",
   },
   {
     id: 21,
-    name: "Stufus R175",
+    name: "MARSHALL MAJOR IV",
     price: 34.1,
-    image: "https://via.placeholder.com/300?text=Earbuds",
+    image: "https://i.pinimg.com/1200x/75/6b/81/756b817e791acdd6e0c022ad6deca265.jpg",
   },
   {
     id: 22,
-    name: "Smart LED Bulb",
+    name: "Portable Waterproof Bluetooth Speaker Dual Pairing - 15W Power",
     price: 15.5,
-    image: "https://via.placeholder.com/300?text=LED+Bulb",
+    image: "https://i.pinimg.com/1200x/d6/c5/6f/d6c56f2bbf69a632e6c59ba81ab6eabb.jpg",
   },
   {
     id: 23,
-    name: "Wireless Mouse",
+    name: "Anker Soundcore 2 Portable Bluetooth Speaker",
     price: 18.75,
-    image: "https://via.placeholder.com/300?text=Mouse",
+    image: "https://i.pinimg.com/1200x/fe/4f/d6/fe4fd6eb6cf32adf65a1dafc2326b2bb.jpg",
   },
   {
     id: 24,
-    name: "Mini Bluetooth Speaker",
+    name: "boat bluetooth",
     price: 22.4,
-    image: "https://via.placeholder.com/300?text=Speaker",
+    image: "https://i.pinimg.com/736x/ec/48/ca/ec48caf3216e8b6b08ab023b14673dd9.jpg",
   },
 
   //3nd set of products
