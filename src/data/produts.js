@@ -179,75 +179,75 @@ export const products= [
   //3nd set of products
   { 
     id: 25,
-    name: "Gaming Keyboard", 
+    name: "Royal Enfield Brand New Genuine Machined Aluminium Front Reservoir Cap (Silver)", 
     price: 49.99,
-    image: "/img10.png"
+    image: "https://i.pinimg.com/1200x/ce/a1/48/cea148ff33b33722baa7d76f92384c55.jpg"
    },
   { 
     id: 26,
-    name: "Laptop Stand",
+    name: "Royal Enfield Bullet genuine Spare Parts",
     price: 25.0,
-    image: "/img11.png" 
+    image: "https://i.pinimg.com/736x/ed/da/43/edda43b85a2066cf93edff0f038bf430.jpg" 
   },
   { 
     id: 27,
-    name: "Smart Watch",
+    name: "LS2 Motorcycle Helmets-Rapid Matt, Black, Size M",
     price: 79.9,
-    image: "/img12.png" 
+    image: "https://i.pinimg.com/1200x/44/0c/b5/440cb51bf85d5a231584f37310048cea.jpg" 
   },
   { 
     id: 28,
-    name: "USB Hub",
+    name: "Shoei X-Spirit III Marc Márquez Black Concept 2.0",
     price: 14.99,
-    image: "/img13.png" 
+    image: "https://i.pinimg.com/1200x/ef/95/51/ef9551fabecdbe9de84b1de3e5e771b2.jpg" 
   },
   { 
     id: 29,
-    name: "Power Bank",
+    name: "Shark Skwal I3 Motorcycle Helmet Rhad Bus",
     price: 29.5,
-    image: "/img14.png" 
+    image: "https://i.pinimg.com/1200x/7b/c4/dd/7bc4ddbee2e21e7a1cf361eaf31c78a2.jpg" 
   },
   { 
     id: 30,
-    name: "Wireless Charger",
+    name: "Shark D-skwal 3 Blast-r Motorcycle Full Face Helmet Matt Black Grey Red Kar",
     price: 19.99,
-    image: "/img15.png" 
+    image: "https://i.pinimg.com/736x/14/9b/f5/149bf50a4072e539bce9a0a0a54456d2.jpg" 
   },
   { 
     id: 31,
-    name: "Portable SSD",
+    name: "Hits Style Motorcycle Armor Body Protection Motorcycle Jacket Men Moto Body Protector 2024",
     price: 99.0,
-    image: "/img16.png" 
+    image: "https://i.pinimg.com/736x/56/15/67/561567f20f5545d8b1cfa957192d9a8d.jpg" 
   },
   { 
     id: 32,
-    name: "Action Camera",
+    name: "Royal Enfield Men's Nirvik V2 Riding Jacket",
     price: 120.0,
-    image: "/img17.png" 
+    image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcS7WKoE8cz7olKwKibg7KtVInwM9LAoAp6hqIxhk38nSilb2n6p0A1uiv7L46DTvKDeZjfAL2bmqTLleu09aj4zpcywU_dPeckvQt5B0BT4Yo-STrscib9uSw" 
   },
   { 
     id: 33,
-    name: "Smart Doorbell",
+    name: "STEALTH Air PRO JACKET",
     price: 89.99,
-    image: "/img18.png" 
+    image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcS53_z7RzR--M7k_gHH7_nL-lMnSB13t8jzf80EnWZLo5RUWlkdiYdXf0r1m1ng4PPuIeHTFkGvUS727dI8f7luA7xTY22kwipy9AqpJY4uxbl27PPYjbsz5A" 
   },
   {
   id: 34,
-  name: "Gaming Headset Pro",
+  name: "Tarmac Rapid Riding Gloves (Black) Black / XL",
   price: 59.99,
-  image: "https://via.placeholder.com/300?text=Gaming+Headset"
+  image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcQKhvaqCsPP4UZVpjElsSOFbWZEqrQJ1O36kGzx0iFT9UObiGHaJ9ZHgXqf0mR1gCvJ7QRhXR6pwEnPMKYbdvX76j6MfiWS"
 },
 {
   id: 35,
-  name: "Mechanical Keyboard RGB",
+  name: "Axor Delta Riding Pant",
   price: 89.50,
-  image: "https://via.placeholder.com/300?text=Mechanical+Keyboard"
+  image: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRk3mgymN0QHEZuUviPZpG07pDI7-2uW4AnL0zy2-YklrIAWGXO1J0_q7ddmpRQrMs42QjIcXK-znE32po-Qqu_qCJj1vScL0tPYqECpgc5vH-VSjxUtZ5PdXQ"
 },
 {
   id: 36,
-  name: "1080p Webcam HD",
+  name: "PowerSports International Korda Summit Riding Jacket",
   price: 39.90,
-  image: "https://via.placeholder.com/300?text=HD+Webcam"
+  image: "https://encrypted-tbn0.gstatic.com/shopping?q=tbn:ANd9GcS5nqxVvf8ECeLZ83AD_nE0VcfTLAK5uStxV46xAf47A3L6WzDvNsfaH3yGU-maxxSn2LDFHvZAmp2zKkP9Svcnex7BRgOU5X1v0q08JFJEXoOBF1wrfhyTfg"
 },
 {
   id: 37,

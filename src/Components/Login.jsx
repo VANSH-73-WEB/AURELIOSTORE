@@ -46,7 +46,9 @@ const Login = () => {
         setError(data.message || "Login failed");
       }
 
-    } catch (err) {
+    } catch (error) {
+      console.log("Error during login:", error);
+
       setError("Server error. Try again later.");
     }
   };
