@@ -1,10 +1,17 @@
 import { useNavigate, Link } from "react-router-dom";
+import {useState} from "react"
 
 const Navbar = ({ cart, focusSearch }) => {
   const navigate = useNavigate();
 
-  // ✅ MOVE THIS HERE
-  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "null");
+  const [showMenu, setShowMenu] = useState(false);
+  let userInfo = null;
+
+  try {
+    userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  } catch {
+    userInfo = null;
+  }
 
   return (
     <nav className="fixed top-0 left-0 w-full z-50">
@@ -48,29 +55,43 @@ const Navbar = ({ cart, focusSearch }) => {
             )}
           </div>
 
-          {/* 👤 USER SECTION */}
-          {userInfo ? (
-            <div className="relative group cursor-pointer">
-              <span className="text-black">{userInfo.name}</span>
+         {/* USER SECTION */}
+<div className="relative">
 
-              <div className="absolute right-0 hidden group-hover:block bg-white text-black p-3 rounded shadow-lg">
-                <p
-                  className="cursor-pointer hover:text-red-500"
-                  onClick={() => {
-                    localStorage.removeItem("userInfo");
-                    window.location.reload();
-                  }}
-                >
-                  Logout
-                </p>
-              </div>
-            </div>
-          ) : (
-            <i
-              className="ri-circle-fill text-3xl text-white cursor-pointer"
-              onClick={() => navigate("/Login")}
-            ></i>
-          )}
+  {/* User Icon */}
+  <i
+    className="ri-user-3-fill text-2xl text-white cursor-pointer"
+    onClick={() => {
+      if (!userInfo) {
+        navigate("/Login");
+      } else {
+        setShowMenu(!showMenu);
+      }
+    }}
+  ></i>
+
+  {/* Dropdown */}
+  {userInfo && showMenu && (
+    <div className="absolute right--39 mt-5 bg-white text-black p-3 rounded shadow-lg w-45">
+
+      <p className="font-semibold border-b pb-1">
+        {userInfo.name}
+      </p>
+
+      <p
+        className="cursor-pointer hover:text-red-500 mt-2"
+        onClick={() => {
+          localStorage.removeItem("userInfo");
+          navigate("/");
+        }}
+      >
+        Logout
+      </p>
+
+    </div>
+  )}
+
+</div>
         </div>
       </div>
     </nav>

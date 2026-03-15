@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 
 const Login = () => {
+  
  const navigate = useNavigate();
  const [formData, setFormData] = useState({
     email: "",
@@ -34,14 +35,18 @@ const Login = () => {
 
    
       const data = await response.json();
+     
 
+console.log(data);
       if (response.ok) {
         // If using JWT token
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
-
-        navigate("/home");
+ // store user info
+  localStorage.setItem("userInfo", JSON.stringify(data));
+    navigate("/home");
+   
       } else {
         setError(data.message || "Login failed");
       }
