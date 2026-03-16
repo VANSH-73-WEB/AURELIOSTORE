@@ -2,20 +2,21 @@ import Navbar from "./Components/Navbar";
 import Middle from "./Components/Middle";
 import Product from "./Components/Bottom/Product";
 import Cart from "./Components/Bottom/Cart";
-import { useState } from "react";
+import { useState ,useRef} from "react";
 import { useLocation } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
 import Notfound from "./Components/Notfound";
 import Login from "./Components/Login";
 import Register from "./Components/register";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-import { useRef } from "react";
 const App = () => {
+   
   const [cart, setCart] = useState([]);
-  const location = useLocation();
-const hideLayout = location.pathname === "/";
-
+ const location = useLocation();
+const hideLayout = ["/", "/register"].includes(location.pathname);
   const searchInputRef = useRef(null);
 
   const focusSearch = () => {
@@ -23,7 +24,7 @@ const hideLayout = location.pathname === "/";
   };
  return (
   <div className="min-h-screen flex flex-col">
-
+<ToastContainer position="top-right" autoClose={2000} />
     {/* Show Navbar only if NOT login */}
     {!hideLayout && <Navbar cart={cart} focusSearch={focusSearch} />}
 

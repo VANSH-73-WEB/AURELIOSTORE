@@ -79,46 +79,58 @@ console.log(data);
       {/* Login Card */}
       <div className="bg-white/10 backdrop-blur-md p-10 rounded-lg w-[350px] shadow-lg text-white">
 
-        {/* Logo */}
         <div className="flex justify-center mb-8">
-          <div className="w-10 h-10 bg-white clip-path-custom"></div>
-        </div>
+  <div className="w-16 h-16 clip-path-custom flex items-center justify-center">
+    <img
+      src="/src/AURILEOSTORE.png"
+      alt="Logo"
+      className="w-full h-full object-contain"
+    />
+  </div>
+</div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} autoComplete="off" className="space-y-6">
 
           {/* Email */}
           <div>
             <label className="block text-sm mb-2">EMAIL ADDRESS</label>
-            <input
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              placeholder="demo@modonotebooks.com"
-              className="w-full bg-transparent border-b border-gray-300 focus:outline-none focus:border-white py-2"
-              required
-            />
+           <input
+  type="email"
+  name="email"
+  autoComplete="email"
+  value={formData.email}
+  onChange={handleChange}
+  placeholder="demo@modonotebooks.com"
+  className="w-full bg-transparent border-b border-gray-300 py-2 
+  focus:outline-none focus:border-white 
+  focus:ring-2 focus:ring-teal-300 focus:ring-opacity-50 transition duration-300"
+  required
+/>
           </div>
 
           {/* Password */}
           <div>
             <label className="block text-sm mb-2">PASSWORD</label>
             <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              placeholder="********"
-              className="w-full bg-transparent border-b border-gray-300 focus:outline-none focus:border-white py-2"
-              required
-            />
+  type="password"
+  name="password"
+  autoComplete="new-password"
+  value={formData.password}
+  onChange={handleChange}
+  placeholder="********"
+  className="w-full bg-transparent border-b border-gray-300 py-2 
+  focus:outline-none focus:border-white 
+  focus:ring-2 focus:ring-teal-300 focus:ring-opacity-50 transition duration-300"
+  required
+/>
           </div>
 
           {/* Button */}
           <button
             type="submit"
             onClick={handleSubmit}
-            className="w-full bg-white text-teal-800 py-2 rounded mt-4 hover:bg-gray-200 transition"
+            className="w-full bg-white text-teal-700 py-3 rounded-lg font-semibold 
+  hover:bg-gray-200 transition duration-300"
           >
             Login
           </button>
