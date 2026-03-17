@@ -2,7 +2,8 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./config/db.js";
-import authRoutes from "./routes/authRoutes.js";
+import authRoutes from "./routes/authroutes.js";
+import productRoutes from "./routes/productroutes.js";
 dotenv.config();
 connectDB();
 
@@ -18,7 +19,7 @@ app.use(
     credentials: true,
   })
 );
-
+app.use("/api/products", productRoutes);
 app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
