@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authroutes.js";
 import productRoutes from "./routes/productroutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 dotenv.config();
 connectDB();
 
@@ -20,6 +21,7 @@ app.use(
   })
 );
 app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes);
 app.listen(5000, () => {
   console.log("Server running on port 5000");
 });
