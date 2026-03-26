@@ -1,7 +1,7 @@
-import Order from "../models/orderModel.js";
-import Cart from "../models/cartModel.js";
+import Order from "../models/order.js";
+import Cart from "../models/Cart.js";
 
-// 🧾 Place Order
+// Place Order
 export const placeOrder = async (req, res) => {
   const { userId } = req.body;
 
@@ -11,7 +11,7 @@ export const placeOrder = async (req, res) => {
     return res.status(400).json({ message: "Cart is empty" });
   }
 
-  // 💰 Calculate total
+  // Calculate total
   const total = cart.products.reduce(
     (acc, item) => acc + item.product.price * item.quantity,
     0

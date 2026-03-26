@@ -163,8 +163,7 @@ const placeOrder = async () => {
           <button
   onClick={placeOrder}
   disabled={loading}
-  className="bg-green-600 text-white px-6 py-2 rounded mt-5 float-right cursor-pointer"
->
+  className="bg-green-600 text-white px-6 py-2 rounded mt-5 float-right cursor-pointer">
   {loading ? "Placing..." : "Checkout"}
 </button>
         </>

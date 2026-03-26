@@ -32,7 +32,7 @@ export const addToCart = async (req, res) => {
 export const getCart = async (req, res) => {
   const { userId } = req.params;
 
-  const cart = await Cart.findOne({ userId })
+ const cart = await Cart.findOne({ user: userId })
     .populate("products.product"); // ✅ THIS LINE IS KEY
 
   res.json({
