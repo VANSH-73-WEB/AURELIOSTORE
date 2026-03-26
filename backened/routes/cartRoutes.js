@@ -8,7 +8,6 @@ import { addToCart, getCart, increaseQty, decreaseQty, removeFromCart } from "..
 
 router.post("/add", addToCart);
 router.get("/:userId", getCart);
-
 router.put("/increase", increaseQty);     
 router.put("/decrease", decreaseQty);     
 router.delete("/remove", removeFromCart); 
