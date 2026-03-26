@@ -26,7 +26,7 @@ const Product = () => {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          userId: "PUT_REAL_USER_ID",
+          userId: "69c1986155ef2a5b74c037d0",
           productId: productId
         })
       });
