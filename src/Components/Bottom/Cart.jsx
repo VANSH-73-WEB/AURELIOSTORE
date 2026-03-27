@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 const Cart = () => {
   const [cart, setCart] = useState([]);
 
-  // const userId = "69c1986155ef2a5b74c037d0"; 
+console.log("CART DATA:", cart); 
 
   useEffect(() => {
     fetchCart();

@@ -8,9 +8,9 @@ import { addToCart, getCart, increaseQty, decreaseQty, removeFromCart } from "..
 
 
 router.post("/add",protect, addToCart);
-router.get("/:userId",protect, getCart);
 router.put("/increase",protect, increaseQty);     
 router.put("/decrease",protect, decreaseQty);     
 router.delete("/remove",protect, removeFromCart); 
+router.get("/mycart",protect, getCart);
 
 export default router;

@@ -8,36 +8,43 @@ const Product = () => {
 
   // FETCH PRODUCTS
   useEffect(() => {
-    const fetchProducts = async () => {
+  const fetchProducts = async () => {
+    try {
       const res = await fetch("http://localhost:5000/api/products");
       const data = await res.json();
-      setProducts(data);
-    };
 
-    fetchProducts();
-  }, []);
+      setProducts(data); 
+    } catch (error) {
+      console.error(error);
+      setProducts([]);
+    }
+  };
+
+  fetchProducts();
+}, []);
 
   // ADD TO CART
   const addToCart = async (productId) => {
-    try {
-      const res = await fetch("http://localhost:5000/api/cart/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          userId: "69c1986155ef2a5b74c037d0",
-          productId: productId
-        })
-      });
+  try {
+    const token = localStorage.getItem("token");
 
-      const data = await res.json();
-      console.log("Cart Updated:", data);
-      alert("Product added to cart");
-    } catch (error) {
-      console.error(error);
-    }
-  };
+    const res = await fetch("http://localhost:5000/api/cart/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`   
+      },
+      body: JSON.stringify({
+        productId
+      })
+    });
+
+    const data = await res.json();
+    console.log("Cart Updated:", data);
+  } catch (error) {
+    console.error(error);
+  }
+};
 
   // PAGINATION LOGIC
   const indexOfLastProduct = currentPage * productsPerPage;
