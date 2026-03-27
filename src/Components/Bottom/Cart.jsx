@@ -3,29 +3,32 @@ import { useEffect, useState } from "react";
 const Cart = () => {
   const [cart, setCart] = useState([]);
 
-  const userId = "69c1986155ef2a5b74c037d0"; 
+  // const userId = "69c1986155ef2a5b74c037d0"; 
 
   useEffect(() => {
     fetchCart();
   }, []);
 
-  const fetchCart = async () => {
-  try {
-    const res = await fetch(`http://localhost:5000/api/cart/${userId}`);
-    const data = await res.json();
+const fetchCart = async () => {
+  const token = localStorage.getItem("token");
+  const res = await fetch("http://localhost:5000/api/cart", {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
 
-    setCart(data.products || []); 
-  } catch (error) {
-    console.error(error);
-    setCart([]); 
-  }
+  const data = await res.json();
+  setCart(data.products || []);
 };
   // Remove
   const removeFromCart = async (productId) => {
+    const token = localStorage.getItem("token");
     await fetch("http://localhost:5000/api/cart/remove", {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, productId })
+      headers: { "Content-Type": "application/json" ,
+         Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ productId })
     });
 
     fetchCart();
@@ -33,10 +36,13 @@ const Cart = () => {
 
   // Increase
   const increaseQty = async (productId) => {
+    const token = localStorage.getItem("token");
     await fetch("http://localhost:5000/api/cart/increase", {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, productId })
+      headers: { "Content-Type": "application/json" ,
+         Authorization: `Bearer ${token}`
+       },
+      body: JSON.stringify({ productId })
     });
 
     fetchCart();
@@ -44,10 +50,13 @@ const Cart = () => {
 
   // Decrease
   const decreaseQty = async (productId) => {
+    const token = localStorage.getItem("token");
     await fetch("http://localhost:5000/api/cart/decrease", {
       method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId, productId })
+      headers: { "Content-Type": "application/json" ,
+         Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ productId })
     });
 
     fetchCart();
@@ -61,18 +70,21 @@ const Cart = () => {
 
 //place order
 const [loading, setLoading] = useState(false);
-
-
 const placeOrder = async () => {
   try {
+    const token = localStorage.getItem("token");
     setLoading(true);
 
     const res = await fetch("http://localhost:5000/api/orders/place", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+
       },
-      body: JSON.stringify({ userId })
+     body: JSON.stringify({
+        items: cart,                   
+      })
     });
 
     const data = await res.json();
@@ -88,6 +100,7 @@ const placeOrder = async () => {
 
   } catch (error) {
     console.error(error);
+   
     alert("Something went wrong ❌");
   } finally {
     setLoading(false);

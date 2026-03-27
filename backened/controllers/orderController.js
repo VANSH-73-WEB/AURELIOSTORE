@@ -5,7 +5,7 @@ import Cart from "../models/Cart.js";
 export const placeOrder = async (req, res) => {
   const { userId } = req.body;
 
-  const cart = await Cart.findOne({ userId }).populate("products.product");
+  const cart = await Cart.findOne({ user: userId }).populate("products.product");
 
   if (!cart || cart.products.length === 0) {
     return res.status(400).json({ message: "Cart is empty" });
