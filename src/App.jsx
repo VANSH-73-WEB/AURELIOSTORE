@@ -1,14 +1,16 @@
+import { useState ,useRef} from "react";
+import { useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import Middle from "./Components/Middle";
 import Product from "./Components/Bottom/Product";
 import Cart from "./Components/Bottom/Cart";
-import { useState ,useRef} from "react";
-import { useLocation } from "react-router-dom";
-import { Routes, Route } from "react-router-dom";
 import Footer from "./Components/Footer/Footer";
 import Notfound from "./Components/Notfound";
 import Login from "./Components/Login";
 import Register from "./Components/register";
+import Orders from "./Components/Bottom/Orders";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -46,7 +48,7 @@ const hideLayout = ["/", "/register"].includes(location.pathname);
           path="/cart"
           element={<Cart cart={cart} setCart={setCart} />}
         />
-
+        <Route path="/orders" element={<Orders />} />
         <Route path="*" element={<Notfound />} />
       </Routes>
     </main>

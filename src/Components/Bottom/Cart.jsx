@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-
+import { toast } from "react-toastify";
 const Cart = () => {
   const [cart, setCart] = useState([]);
 
-console.log("CART DATA:", cart); 
+
 
   useEffect(() => {
     fetchCart();
@@ -93,7 +93,7 @@ const placeOrder = async () => {
       throw new Error(data.message || "Order failed");
     }
 
-    alert("Order Placed ✅");
+    toast.success("Order placed successfully ✅");
 
    
     setCart([]);
@@ -101,7 +101,7 @@ const placeOrder = async () => {
   } catch (error) {
     console.error(error);
    
-    alert("Something went wrong ❌");
+    toast.error("Something went wrong ❌");
   } finally {
     setLoading(false);
   }

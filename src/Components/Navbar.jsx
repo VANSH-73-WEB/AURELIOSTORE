@@ -87,7 +87,9 @@ const Navbar = ({ cart, focusSearch }) => {
       >
         Logout
       </p>
-
+<button onClick={() => navigate("/orders")}>
+  Orders
+</button>
     </div>
   )}
 
