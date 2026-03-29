@@ -5,7 +5,7 @@ const router = express.Router();
 
 import { placeOrder, getOrders } from "../controllers/orderController.js";
 
-router.post("/place",protect, placeOrder);
-router.get("/:userId",protect, getOrders);
+router.post("/place", protect, placeOrder);
 router.get("/myorders", protect, getMyOrders);
+router.get("/:userId", protect, getOrders);
 export default router;

@@ -19,11 +19,10 @@ export const placeOrder = async (req, res) => {
 
   //Create order
   const order = await Order.create({
-    userId,
-    products: cart.products,
-    totalPrice: total
-  });
-
+  user: req.user._id,  
+  products: cart.products,
+  totalPrice: total
+});
   //Clear cart
   cart.products = [];
   await cart.save();
@@ -38,20 +37,20 @@ export const placeOrder = async (req, res) => {
 export const getOrders = async (req, res) => {
   const { userId } = req.params;
 
-  const orders = await Order.find({ userId }).populate("products.product");
+  const orders = await Order.find({ user: userId }).populate("products.product");
 
   res.json(orders);
 };
 //order history
-export const getMyOrders = async(req,res) => {
-  try{
-    const orders = await Order.find({userId :req.user._id})
-    .populate("products.product")
-    .sort({ createdAt: -1 });
+export const getMyOrders = async (req, res) => {
+  try {
+    const orders = await Order.find({ user: req.user._id })
+      .populate("products.product")
+      .sort({ createdAt: -1 });
 
     res.json(orders);
+
   } catch (error) {
     res.status(500).json({ message: error.message });
-
   }
 };

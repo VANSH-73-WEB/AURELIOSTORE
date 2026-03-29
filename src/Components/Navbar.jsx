@@ -87,7 +87,9 @@ const Navbar = ({ cart, focusSearch }) => {
       >
         Logout
       </p>
-<button onClick={() => navigate("/orders")}>
+<button 
+  className="cursor-pointer hover:text-red-500 mt-2"
+onClick={() => navigate("/orders")}>
   Orders
 </button>
     </div>
