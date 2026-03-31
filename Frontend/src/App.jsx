@@ -8,7 +8,7 @@ import Cart from "./Components/Bottom/Cart";
 import Footer from "./Components/Footer/Footer";
 import Notfound from "./Components/Notfound";
 import Login from "./Components/Login";
-import Register from "./Components/Register";
+import Register from "./Components/register";
 import Orders from "./Components/Bottom/Orders";
 
 import { ToastContainer, toast } from "react-toastify";
