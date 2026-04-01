@@ -1,14 +1,16 @@
 import axios from "axios";
+import BASE_URL from "../config/api";
 
-const API_URL = "http://localhost:5173/api/auth/";
 
-export const registerUser = async (userData) => {
+
+export const registerUser = async (data) => {
   
-    const response = await axios.post(`${API_URL}/register`, userData); 
-    return response.data;
+    const res = await axios.post(`${BASE_URL}/api/auth/register`, data); 
+    return res.data;
 };
 
-    export const loginUser = async (userData) => {
-  const response = await axios.post(API_URL + "login", userData);
-  return response.data;
-  } ;
+   
+export const loginUser = async (data) => {
+  const res = await axios.post(`${BASE_URL}/api/auth/login`, data);
+  return res.data;
+};

@@ -1,7 +1,7 @@
 import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
+const BASE_URL = "https://aurelio-backend-ztel.onrender.com";
 const Login = () => {
   
  const navigate = useNavigate();
@@ -25,7 +25,7 @@ const Login = () => {
   
 
   try{
-    const response = await fetch("http://localhost:5000/api/auth/login", {
+    const response = await fetch(`${BASE_URL}/api/auth/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -39,11 +39,11 @@ const Login = () => {
 
 console.log(data);
       if (response.ok) {
-        // If using JWT token
+       
         if (data.token) {
           localStorage.setItem("token", data.token);
         }
- // store user info
+ 
   localStorage.setItem("userInfo", JSON.stringify(data));
     navigate("/home");
    
