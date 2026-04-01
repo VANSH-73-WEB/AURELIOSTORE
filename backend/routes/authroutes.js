@@ -9,8 +9,6 @@ router.post('/register', registerUser);
 router.post('/login', loginUser);
 
 
-router.post("/register", registerUser);
-router.post("/login", loginUser);
 router.get("/profilepic", protect, (req, res) => {
   res.json(req.user);
 });
