@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+
+const BASE_URL = "https://aurelio-backend-ztel.onrender.com";
+
 const Cart = () => {
   const [cart, setCart] = useState([]);
 
@@ -11,7 +14,7 @@ const Cart = () => {
 
 const fetchCart = async () => {
   const token = localStorage.getItem("token");
-  const res = await fetch("http://localhost:5000/api/cart", {
+  const res = await fetch(`${BASE_URL}/api/auth/cart`, {
     headers: {
       Authorization: `Bearer ${token}`
     }

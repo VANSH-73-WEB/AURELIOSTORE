@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+const BASE_URL = "https://aurelio-backend-ztel.onrender.com";
 const Orders = () => {
   const [orders, setOrders] = useState([]);
   
@@ -13,7 +13,7 @@ const Orders = () => {
   const fetchOrders = async () => {
     const token = localStorage.getItem("token");
 
-    const res = await fetch("http://localhost:5000/api/orders/myorders", {
+    const res = await fetch(`${BASE_URL}/api/auth/orders/myorders`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

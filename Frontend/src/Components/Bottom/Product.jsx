@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-
+const BASE_URL = "https://aurelio-backend-ztel.onrender.com";
 const Product = () => {
   const [products, setProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -10,7 +10,7 @@ const Product = () => {
   useEffect(() => {
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/products");
+      const res = await fetch(`${BASE_URL}/api/auth/products`);
       const data = await res.json();
 
       setProducts(data); 
@@ -28,7 +28,7 @@ const Product = () => {
   try {
     const token = localStorage.getItem("token");
 
-    const res = await fetch("http://localhost:5000/api/cart/add", {
+    const res = await fetch(`${BASE_URL}/api/auth/cart/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
