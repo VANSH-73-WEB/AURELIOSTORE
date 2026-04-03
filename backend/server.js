@@ -25,7 +25,6 @@ app.use(
     credentials: true,
   })
 );
-app.options("*", cors());
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
