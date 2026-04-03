@@ -17,7 +17,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use(
   cors({
-    origin:[ "http://localhost:5173",
+    origin:[
       "https://aureliostore.vercel.app"
     ],
     credentials: true,
