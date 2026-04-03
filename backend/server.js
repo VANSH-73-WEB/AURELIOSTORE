@@ -14,7 +14,6 @@ const app = express();
 
 app.use(express.json());
 
-app.use("/api/auth", authRoutes);
 app.use(
   cors({
     origin:[
@@ -26,6 +25,8 @@ app.use(
     credentials: true,
   })
 );
+app.options("*", cors());
+app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
