@@ -10,7 +10,7 @@ const Product = () => {
   useEffect(() => {
   const fetchProducts = async () => {
     try {
-      const res = await fetch(`${BASE_URL}/api/auth/products`);
+      const res = await fetch(`${BASE_URL}/api/products`);
       const data = await res.json();
 
       setProducts(data); 
@@ -28,7 +28,7 @@ const Product = () => {
   try {
     const token = localStorage.getItem("token");
 
-    const res = await fetch(`${BASE_URL}/api/auth/cart/add`, {
+    const res = await fetch(`${BASE_URL}/api/cart/add`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

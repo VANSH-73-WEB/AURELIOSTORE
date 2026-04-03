@@ -14,7 +14,7 @@ const Cart = () => {
 
 const fetchCart = async () => {
   const token = localStorage.getItem("token");
-  const res = await fetch(`${BASE_URL}/api/auth/cart`, {
+  const res = await fetch(`${BASE_URL}/api/cart`, {
     headers: {
       Authorization: `Bearer ${token}`
     }
@@ -26,7 +26,7 @@ const fetchCart = async () => {
   // Remove
   const removeFromCart = async (productId) => {
     const token = localStorage.getItem("token");
-    await fetch("http://localhost:5000/api/cart/remove", {
+    await fetch(`${BASE_URL}/api/cart/remove`, {
       method: "DELETE",
       headers: { "Content-Type": "application/json" ,
          Authorization: `Bearer ${token}`
@@ -40,7 +40,7 @@ const fetchCart = async () => {
   // Increase
   const increaseQty = async (productId) => {
     const token = localStorage.getItem("token");
-    await fetch("http://localhost:5000/api/cart/increase", {
+    await fetch(`${BASE_URL}/api/cart/increase`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" ,
          Authorization: `Bearer ${token}`
@@ -54,7 +54,7 @@ const fetchCart = async () => {
   // Decrease
   const decreaseQty = async (productId) => {
     const token = localStorage.getItem("token");
-    await fetch("http://localhost:5000/api/cart/decrease", {
+    await fetch(`${BASE_URL}/api/cart/decrease`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" ,
          Authorization: `Bearer ${token}`
@@ -78,7 +78,7 @@ const placeOrder = async () => {
     const token = localStorage.getItem("token");
     setLoading(true);
 
-    const res = await fetch("http://localhost:5000/api/orders/place", {
+    const res = await fetch(`${BASE_URL}/api/orders/place`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
