@@ -18,8 +18,11 @@ app.use("/api/auth", authRoutes);
 app.use(
   cors({
     origin:[
-      "https://aureliostore.vercel.app"
+      "https://aureliostore.vercel.app",
+      
     ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true,
   })
 );
