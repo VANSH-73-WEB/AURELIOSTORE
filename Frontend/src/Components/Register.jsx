@@ -23,7 +23,7 @@ const Register = () => {
 
   const handleSubmit = async () =>{
     try{
-      const res = await fetch(`${BASE_URL}/api/register`, {method:"POST",
+      const res = await fetch(`${BASE_URL}/api/auth/register`, {method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify(User)
     });

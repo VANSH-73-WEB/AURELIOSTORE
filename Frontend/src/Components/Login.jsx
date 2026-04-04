@@ -30,6 +30,7 @@ const Login = () => {
       headers: {
         "Content-Type": "application/json"
       },
+       credentials: "include",
       body: JSON.stringify(formData)
     });
 
@@ -37,7 +38,7 @@ const Login = () => {
       const data = await response.json();
      
 
-console.log(data);
+
       if (response.ok) {
        
         if (data.token) {
