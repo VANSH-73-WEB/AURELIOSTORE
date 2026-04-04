@@ -79,3 +79,17 @@ export const deleteProduct = async (req , res) =>{
     };
   
 };
+//search products
+export const searchProducts = async (req, res) => {
+  try {
+    const query = req.query.q;
+
+    const products = await Product.find({
+      name: { $regex: query, $options: "i" } // case-insensitive search
+    });
+
+    res.json(products);
+  } catch (error) {
+    res.status(500).json({ message: "Search failed" });
+  }
+};
