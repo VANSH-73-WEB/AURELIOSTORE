@@ -12,11 +12,7 @@ connectDB();
 
 const app = express();
 
-const allowedOrigins = [
-  "https://aureliostore.vercel.app",
-  "http://localhost:5173"
-];
-const cors = require('cors');
+
 
 app.use(cors({
   origin: ['http://localhost:5173', 'https://your-production-domain.com'],
