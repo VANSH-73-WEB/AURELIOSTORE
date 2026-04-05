@@ -20,7 +20,7 @@ app.use(cors({
 
 app.use(express.json());
 
-app.use("/src", express.static("src"));
+app.use("/Uploads", express.static("/Uploads"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
