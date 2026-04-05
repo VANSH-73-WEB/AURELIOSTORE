@@ -4,12 +4,15 @@ const BASE_URL = "https://aurelio-backend-ztel.onrender.com";
 
 const Middle = ({ searchInputRef, setProducts }) => {
   const [query, setQuery] = useState("");
-
-  useEffect(() => {
+useEffect(() => {
+  const delay = setTimeout(() => {
     if (query.trim() !== "") {
       searchProducts();
     }
-  }, [query]);
+  }, 500); // wait 500ms
+
+  return () => clearTimeout(delay);
+}, [query]);
 
   const searchProducts = async () => {
     const res = await fetch(`${BASE_URL}/api/products/search?q=${query}`);
