@@ -18,7 +18,7 @@ const Navbar = ({ cart, focusSearch }) => {
       <div className="bg-blue-950/70 backdrop-blur-md mx-40 h-20 rounded-b-2xl flex items-center shadow-lg px-6">
 
         <img
-          src="src/AURILEOSTORE.png"
+          src="src/Uploads/AURILEOSTORE.png"
           alt="Aurelio Store"
           className="w-20 h-auto"
         />

@@ -1,6 +1,7 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
+import path from "path";
 import connectDB from "./config/db.js";
 import authRoutes from "./routes/authroutes.js";
 import productRoutes from "./routes/productroutes.js";
@@ -19,6 +20,7 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use("/src", express.static("src"));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);

@@ -83,7 +83,7 @@ const Login = () => {
         <div className="flex justify-center mb-8">
   <div className="w-16 h-16 clip-path-custom flex items-center justify-center">
     <img
-      src="/src/AURILEOSTORE.png"
+      src="/src/Uploads/AURILEOSTORE.png"
       alt="Logo"
       className="w-full h-full object-contain"
     />
