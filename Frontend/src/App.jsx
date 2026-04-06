@@ -17,6 +17,7 @@ import "react-toastify/dist/ReactToastify.css";
 const App = () => {
    
   const [cart, setCart] = useState([]);
+  const [products, setProducts] = useState([]);
  const location = useLocation();
 const hideLayout = ["/", "/register"].includes(location.pathname);
   const searchInputRef = useRef(null);
@@ -38,8 +39,8 @@ const hideLayout = ["/", "/register"].includes(location.pathname);
           path="/home"
           element={
             <>
-              <Middle searchInputRef={searchInputRef} />
-              <Product cart={cart} setCart={setCart} />
+              <Middle searchInputRef={searchInputRef} setProducts={setProducts}  />
+              <Product  products={products}  cart={cart}  setCart={setCart}  />
             </>
           }
         />

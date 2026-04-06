@@ -31,19 +31,27 @@ export const  getProducts = async(req , res) =>{
 };
 
 //get single products
+import mongoose from "mongoose";
 
-export const getsingleProduct =  async(req , res) =>{
-  try{
-    const product = await Product.findById(req.params.id);
+export const getsingleProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
 
-    if(!product){
-      return res.status(404).json({ message: "Product nnot found"});
+    // 🔥 THIS WILL STOP THE ERROR COMPLETELY
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ message: "Invalid Product ID" });
     }
-    res.return(200).json(product);
 
-  }
-  catch(error){
-    res.status(500).json({ message: error.message});
+    const product = await Product.findById(id);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    res.status(200).json(product);
+
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
 
@@ -84,8 +92,12 @@ export const searchProducts = async (req, res) => {
   try {
     const query = req.query.q;
 
-    const products = await Product.find({
-      name: { $regex: query, $options: "i" } // case-insensitive search
+      const products = await Product.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } }
+      ]
     });
 
     res.json(products);

@@ -1,5 +1,6 @@
 import  { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import myImage from "../Uploads/AURILEOSTORE.png";
 
 const BASE_URL = "https://aurelio-backend-ztel.onrender.com";
 const Login = () => {
@@ -83,7 +84,7 @@ const Login = () => {
         <div className="flex justify-center mb-8">
   <div className="w-16 h-16 clip-path-custom flex items-center justify-center">
     <img
-      src="/src/Uploads/AURILEOSTORE.png"
+      src={myImage}
       alt="Logo"
       className="w-full h-full object-contain"
     />

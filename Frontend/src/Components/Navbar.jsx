@@ -1,5 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import {useState} from "react"
+import myImage from "../Uploads/AURILEOSTORE.png";
 
 const Navbar = ({ cart, focusSearch }) => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const Navbar = ({ cart, focusSearch }) => {
       <div className="bg-blue-950/70 backdrop-blur-md mx-40 h-20 rounded-b-2xl flex items-center shadow-lg px-6">
 
         <img
-          src="src/Uploads/AURILEOSTORE.png"
+          src={myImage}
           alt="Aurelio Store"
           className="w-20 h-auto"
         />

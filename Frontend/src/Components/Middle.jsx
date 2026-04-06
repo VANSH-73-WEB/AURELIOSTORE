@@ -4,21 +4,25 @@ const BASE_URL = "https://aurelio-backend-ztel.onrender.com";
 
 const Middle = ({ searchInputRef, setProducts }) => {
   const [query, setQuery] = useState("");
-useEffect(() => {
-  const delay = setTimeout(() => {
-    if (query.trim() !== "") {
-      searchProducts();
-    }
-  }, 500); // wait 500ms
 
-  return () => clearTimeout(delay);
-}, [query]);
 
   const searchProducts = async () => {
     const res = await fetch(`${BASE_URL}/api/products/search?q=${query}`);
     const data = await res.json();
+    console.log("Search Results:", data);
     setProducts(data);
   };
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      if (query.trim() !== "") {
+        searchProducts();
+      }
+    }, 500);
+
+    return () => clearTimeout(delay);
+  }, [query]);
+
 
   return (
     <div className="flex justify-center items-center">
