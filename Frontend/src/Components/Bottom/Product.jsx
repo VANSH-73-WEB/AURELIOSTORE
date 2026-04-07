@@ -40,7 +40,7 @@ const Product = () => {
     });
 
     const data = await res.json();
-    console.log("Cart Updated:", data);
+    
   } catch (error) {
     console.error(error);
   }

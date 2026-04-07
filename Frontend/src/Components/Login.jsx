@@ -61,7 +61,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-700 to-teal-900 flex items-center justify-center relative">
+    <div className="min-h-screen bg-linear-to-br from-teal-700 to-teal-900 flex items-center justify-center relative">
 
       {/* Top Navigation */}
      <div

@@ -36,7 +36,7 @@ import mongoose from "mongoose";
 export const getsingleProduct = async (req, res) => {
   try {
     const { id } = req.params;
-
+console.log("❌ ID ROUTE HIT");
     // 🔥 THIS WILL STOP THE ERROR COMPLETELY
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid Product ID" });
@@ -89,19 +89,28 @@ export const deleteProduct = async (req , res) =>{
 };
 //search products
 export const searchProducts = async (req, res) => {
+  console.log("✅ SEARCH ROUTE HIT");
   try {
-    const query = req.query.q;
+    const q = req.query.q;
 
-      const products = await Product.find({
-      $or: [
-        { title: { $regex: query, $options: "i" } },
-        { description: { $regex: query, $options: "i" } },
-        { category: { $regex: query, $options: "i" } }
-      ]
+    console.log("Incoming query:", q); 
+
+   
+    if (!q || q.trim() === "") {
+      return res.status(200).json([]);
+    }
+
+    
+    const products = await Product.find({
+      title: { $regex: q, $options: "i" }
     });
 
-    res.json(products);
+    res.status(200).json(products);
   } catch (error) {
-    res.status(500).json({ message: "Search failed" });
+    console.error("SEARCH ERROR:", error);
+    res.status(500).json({
+      message: "Search failed",
+      error: error.message,
+    });
   }
 };

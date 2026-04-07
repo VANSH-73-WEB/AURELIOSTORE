@@ -6,23 +6,30 @@ const Middle = ({ searchInputRef, setProducts }) => {
   const [query, setQuery] = useState("");
 
 
-  const searchProducts = async () => {
+ const searchProducts = async () => {
+  if (!query.trim()) return; 
+
+  try {
     const res = await fetch(`${BASE_URL}/api/products/search?q=${query}`);
+   
+    if (!res.ok) throw new Error("Search failed");
+
     const data = await res.json();
     console.log("Search Results:", data);
     setProducts(data);
-  };
+  } catch (err) {
+    console.error(err);
+  }
+};
+ useEffect(() => {
+  if (!query.trim()) return; 
 
-  useEffect(() => {
-    const delay = setTimeout(() => {
-      if (query.trim() !== "") {
-        searchProducts();
-      }
-    }, 500);
+  const delay = setTimeout(() => {
+    searchProducts();
+  }, 500);
 
-    return () => clearTimeout(delay);
-  }, [query]);
-
+  return () => clearTimeout(delay);
+}, [query]);
 
   return (
     <div className="flex justify-center items-center">
