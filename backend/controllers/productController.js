@@ -89,28 +89,32 @@ export const deleteProduct = async (req , res) =>{
 };
 //search products
 export const searchProducts = async (req, res) => {
-  console.log("✅ SEARCH ROUTE HIT");
   try {
-    const q = req.query.q;
+    const q = (req.query.q || "").trim();
 
-    console.log("Incoming query:", q); 
+    if (!q) return res.status(200).json([]);
 
-   
-    if (!q || q.trim() === "") {
-      return res.status(200).json([]);
-    }
+    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-    
     const products = await Product.find({
-      title: { $regex: q, $options: "i" }
-    });
+      title: {
+        $exists: true,
+        $type: "string",   // 🔥 CRITICAL FIX
+        $regex: escaped,
+        $options: "i"
+      }
+    })
+      .limit(5)
+      .select("title")
+      .lean();
 
     res.status(200).json(products);
+
   } catch (error) {
-    console.error("SEARCH ERROR:", error);
+    console.error("🔥 FINAL ERROR:", error);
     res.status(500).json({
       message: "Search failed",
-      error: error.message,
+      error: error.message
     });
   }
 };

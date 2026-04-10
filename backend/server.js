@@ -22,9 +22,9 @@ app.use(express.json());
 app.use("/Uploads", express.static("/Uploads"));
 
 app.use("/api/auth", authRoutes);
-app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/products", productRoutes);
 
 app.listen(5000, () => {
   console.log("Server running on port 5000");
