@@ -6,15 +6,18 @@ import {
   getsingleProduct,
   updateProduct,
   deleteProduct,
-  searchProducts
+  getProductss 
 } from "../controllers/productController.js";
 
 const router = express.Router();
 //routes
-router.get("/search", searchProducts);
+router.get("/search", getProductss );
 router.get("/", getProducts);
-router.get("/:id", getsingleProduct);
 router.post("/create", createProduct);
 router.put("/:id", updateProduct);
 router.delete("/:id", deleteProduct);
+router.get("/:id", getsingleProduct);
+
+
+
 export default  router;

@@ -88,25 +88,27 @@ export const deleteProduct = async (req , res) =>{
   
 };
 //search products
-export const searchProducts = async (req, res) => {
+// productController.js
+export const getProductss = async (req, res) => {
   try {
-    const q = (req.query.q || "").trim();
+    const { q, category, sort } = req.query;
 
-    if (!q) return res.status(200).json([]);
+    let filter = {};
 
-    const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    // if search query exists, add it to filter
+    if (q) {
+      const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      filter.title = { $regex: escaped, $options: "i" };
+    }
 
-    const products = await Product.find({
-      title: { $regex: escaped, $options: "i" }
-    })
-      .limit(5)
-      .select("title")
+    if (category) filter.category = category;
+
+    const products = await Product.find(filter)
+      .sort(sort === "price" ? { price: 1 } : {})
       .lean();
 
     res.status(200).json(products);
-
   } catch (error) {
-    console.error("Search error:", error);
-    res.status(500).json({ message: "Search failed", error: error.message });
+    res.status(500).json({ message: error.message });
   }
 };
