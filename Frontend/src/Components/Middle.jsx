@@ -32,8 +32,12 @@ useEffect(() => {
     }
 
   fetch(`${BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`)
-  .then(res => {
-    if (!res.ok) throw new Error("API Error");
+  .then(async res => {
+    if (!res.ok) {
+  const errorData = await res.json();
+  console.error("Backend Error:", errorData);
+  throw new Error("API Error");
+}
     return res.json();
   })
   .then(data => {

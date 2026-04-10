@@ -97,12 +97,7 @@ export const searchProducts = async (req, res) => {
     const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
     const products = await Product.find({
-      title: {
-        $exists: true,
-        $type: "string",   // 🔥 CRITICAL FIX
-        $regex: escaped,
-        $options: "i"
-      }
+      title: { $regex: escaped, $options: "i" }
     })
       .limit(5)
       .select("title")
@@ -111,10 +106,7 @@ export const searchProducts = async (req, res) => {
     res.status(200).json(products);
 
   } catch (error) {
-    console.error("🔥 FINAL ERROR:", error);
-    res.status(500).json({
-      message: "Search failed",
-      error: error.message
-    });
+    console.error("Search error:", error);
+    res.status(500).json({ message: "Search failed", error: error.message });
   }
 };
