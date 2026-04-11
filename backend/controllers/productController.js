@@ -89,35 +89,24 @@ export const deleteProduct = async (req , res) =>{
   
 };
 
+//search products
+
 export const searchProducts = async (req, res) => {
   try {
-    const { q } = req.query;
+    console.log("🔥 API HIT");
 
-    if (!q || q.trim().length === 0) {
-      return res.status(400).json({ message: "Query is required" });
-    }
+    const q = req.query.q || "";
 
-    const query = q.trim();
+    const products = await Product.find();
 
-    const products = await Product.find({
-      $or: [
-        { title: { $regex: query, $options: "i" } },
-        { description: { $regex: query, $options: "i" } },
-        { category: { $regex: query, $options: "i" } },
-      ],
-    })
-      .limit(10) // ✅ limit results for performance
-      .select("_id title description category price image"); // ✅ only needed fields
+    const filtered = products.filter(p =>
+      p.title.toLowerCase().includes(q.toLowerCase())
+    );
 
-    if (products.length === 0) {
-      return res.status(404).json({ message: "No products found" });
-    }
+    res.json(filtered);
 
-    return res.status(200).json(products);
-
-  } catch (error) {
-    console.error("Search error:", error);
-    return res.status(500).json({ message: "Internal server error" });
+  } catch (err) {
+    console.error("❌ ERROR:", err);
+    res.status(500).json({ error: err.message });
   }
 };
-
