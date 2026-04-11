@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import mongoose from "mongoose";
 //create product
 
 export const createProduct = async(req , res) =>{
@@ -31,7 +32,7 @@ export const  getProducts = async(req , res) =>{
 };
 
 //get single products
-import mongoose from "mongoose";
+
 
 export const getsingleProduct = async (req, res) => {
   try {
@@ -87,28 +88,36 @@ export const deleteProduct = async (req , res) =>{
     };
   
 };
-//search products
-// productController.js
-export const getProductss = async (req, res) => {
+
+export const searchProducts = async (req, res) => {
   try {
-    const { q, category, sort } = req.query;
+    const { q } = req.query;
 
-    let filter = {};
-
-    // if search query exists, add it to filter
-    if (q) {
-      const escaped = q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      filter.title = { $regex: escaped, $options: "i" };
+    if (!q || q.trim().length === 0) {
+      return res.status(400).json({ message: "Query is required" });
     }
 
-    if (category) filter.category = category;
+    const query = q.trim();
 
-    const products = await Product.find(filter)
-      .sort(sort === "price" ? { price: 1 } : {})
-      .lean();
+    const products = await Product.find({
+      $or: [
+        { title: { $regex: query, $options: "i" } },
+        { description: { $regex: query, $options: "i" } },
+        { category: { $regex: query, $options: "i" } },
+      ],
+    })
+      .limit(10) // ✅ limit results for performance
+      .select("_id title description category price image"); // ✅ only needed fields
 
-    res.status(200).json(products);
+    if (products.length === 0) {
+      return res.status(404).json({ message: "No products found" });
+    }
+
+    return res.status(200).json(products);
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    console.error("Search error:", error);
+    return res.status(500).json({ message: "Internal server error" });
   }
 };
+

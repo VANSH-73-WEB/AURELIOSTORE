@@ -1,57 +1,63 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const BASE_URL = "https://aurelio-backend-ztel.onrender.com";
 
 const Middle = ({ searchInputRef, setProducts }) => {
   const [query, setQuery] = useState("");
-const [suggestions, setSuggestions] = useState([]);
-const [showDropdown, setShowDropdown] = useState(false);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-const escapeRegex = (str) =>
-  str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
- const searchProducts = async () => {
-  if (!query.trim()) return; 
+  // ✅ Unified search function
+  const searchProducts = async (searchQuery = query) => {
+    if (!searchQuery.trim()) {
+      setProducts([]);
+      return;
+    }
+    setLoading(true);
+    setShowDropdown(false); // ✅ Close dropdown on search
+    try {
+      const res = await fetch(
+        `${BASE_URL}/api/products/search?q=${encodeURIComponent(searchQuery)}`
+      );
+      if (!res.ok) throw new Error("Search failed");
+      const data = await res.json();
+      setProducts(data);
+    } catch (err) {
+      console.error("Search error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  try {
-    const res = await fetch(`${BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`);
-    if (!res.ok) throw new Error("Search failed");
-
-    const data = await res.json();
-    console.log("Search Results:", data);
-    setProducts(data);
-  } catch (err) {
-    console.error(err);
-  }
-};
-useEffect(() => {
-  const delay = setTimeout(() => {
+  // ✅ Suggestions with debounce
+  useEffect(() => {
     if (query.trim().length < 2) {
       setSuggestions([]);
+      setShowDropdown(false); // ✅ Fix flicker on clear
       return;
     }
 
-  fetch(`${BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`)
-  .then(async res => {
-    if (!res.ok) {
-  const errorData = await res.json();
-  console.error("Backend Error:", errorData);
-  throw new Error("API Error");
-}
-    return res.json();
-  })
-  .then(data => {
-    setSuggestions(data);
-    setShowDropdown(true);
-  })
-  .catch(err => {
-    console.error("Suggestion error:", err);
-    setSuggestions([]);
-  });
-  }, 300); 
+    const delay = setTimeout(() => {
+      fetch(`${BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`)
+        .then((res) => {
+          if (!res.ok) throw new Error("Suggestion fetch failed");
+          return res.json();
+        })
+        .then((data) => {
+          setSuggestions(data);
+          setShowDropdown(true);
+        })
+        .catch((err) => {
+          console.error("Suggestion error:", err);
+          setSuggestions([]);
+        });
+    }, 300);
 
-  return () => clearTimeout(delay);
-}, [query]);
+    return () => clearTimeout(delay);
+  }, [query]);
 
   return (
     <div className="flex justify-center items-center">
@@ -68,55 +74,57 @@ useEffect(() => {
       <div className="absolute w-340 h-30 bg-white rounded-tl-2xl rounded-tr-2xl top-100 flex">
         <h1 className="font-raleway text-4xl ml-3 mt-3">Give All You Need</h1>
 
-       <div className="absolute top-5 right-5 cursor-pointer">
-  <input
-    autoFocus
-    ref={searchInputRef}
-    className="bg-white w-full h-[45px] text-gray-600 rounded-full border border-gray-300 outline-none pl-10 pr-28"
-    placeholder="Search on Aurileo"
-    value={query}
-    onChange={(e) => setQuery(e.target.value)}
-    onFocus={() => suggestions.length && setShowDropdown(true)}
-    onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-  />
+        <div className="absolute top-5 right-5 cursor-pointer">
+          <input
+            autoFocus
+            ref={searchInputRef}
+            className="bg-white w-full h-[45px] text-gray-600 rounded-full border border-gray-300 outline-none pl-10 pr-28"
+            placeholder="Search on Aurileo"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => suggestions.length && setShowDropdown(true)}
+            onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
+            onKeyDown={(e) => e.key === "Enter" && searchProducts()} // ✅ Enter key
+          />
 
-  <i className="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <i className="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
 
-  {/* 🔽 DROPDOWN */}
-  {showDropdown && suggestions.length > 0 && (
-    <div className="absolute top-[50px] left-0 bg-white border w-full rounded-xl shadow-lg z-50 max-h-[250px] overflow-y-auto">
-      {suggestions.map((item) => (
-        <div
-          key={item._id}
-          className="p-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
-          onClick={() => {
-            setQuery(item.title);
-            setShowDropdown(false);
-            setProducts([item]); // 👈 show selected result instantly
-          }}
-        >
-         <span>
-  {item.title
-    .split(new RegExp(`(${escapeRegex(query)})`, "gi"))
-    .map((part, i) =>
-      part.toLowerCase() === query.toLowerCase() ? (
-        <b key={i} className="text-black">{part}</b>
-      ) : (
-        part
-      )
-    )}
-</span>
-        </div>
-      ))}
-    </div>
-  )}
+          {/* Dropdown */}
+          {showDropdown && suggestions.length > 0 && (
+            <div className="absolute top-[50px] left-0 bg-white border w-full rounded-xl shadow-lg z-50 max-h-[250px] overflow-y-auto">
+              {suggestions.map((item) => (
+                <div
+                  key={item._id}
+                  className="p-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
+                  onMouseDown={() => { // ✅ onMouseDown avoids onBlur race condition
+                    setQuery(item.title);
+                    setShowDropdown(false);
+                    searchProducts(item.title); // ✅ Pass selected title directly
+                  }}
+                >
+                  <span>
+                    {item.title
+                      .split(new RegExp(`(${escapeRegex(query)})`, "gi"))
+                      .map((part, i) =>
+                        part.toLowerCase() === query.toLowerCase() ? (
+                          <b key={i} className="text-black">{part}</b>
+                        ) : (
+                          part
+                        )
+                      )}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
 
           <button
             type="button"
-            className="absolute right-1 top-1/2 -translate-y-1/2 bg-black text-white px-6 py-2 rounded-full cursor-pointer"
-            onClick={searchProducts}
+            className="absolute right-1 top-1/2 -translate-y-1/2 bg-black text-white px-6 py-2 rounded-full cursor-pointer disabled:opacity-50"
+            onClick={() => searchProducts()}
+            disabled={loading} // ✅ Prevent spam clicks
           >
-            Search
+            {loading ? "..." : "Search"} {/* ✅ Loading feedback */}
           </button>
         </div>
       </div>
