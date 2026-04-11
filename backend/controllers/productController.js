@@ -96,14 +96,13 @@ export const searchProducts = async (req, res) => {
     console.log("🔥 API HIT");
 
     const q = req.query.q || "";
+    console.log("🔍 Search Query:", q) ;
 
-    const products = await Product.find();
+    const products = await Product.find({
+      title: { $regex: q, $options: 'i' }
+    });
 
-    const filtered = products.filter(p =>
-      p.title.toLowerCase().includes(q.toLowerCase())
-    );
-
-    res.json(filtered);
+    res.json(products);
 
   } catch (err) {
     console.error("❌ ERROR:", err);
