@@ -74,11 +74,11 @@ const Middle = ({ searchInputRef, setProducts }) => {
       <div className="absolute w-340 h-30 bg-white rounded-tl-2xl rounded-tr-2xl top-100 flex">
         <h1 className="font-raleway text-4xl ml-3 mt-3">Give All You Need</h1>
 
-        <div className="absolute top-5 right-5 cursor-pointer">
+        <div className="absolute top-5 right-39 cursor-pointer">
           <input
             autoFocus
             ref={searchInputRef}
-            className="bg-white w-full h-[45px] text-gray-600 rounded-full border border-gray-300 outline-none pl-10 pr-28"
+            className="bg-white w-200 h-[45px] text-gray-600 rounded-full border border-gray-300 outline-none pl-10 pr-25"
             placeholder="Search on Aurileo"
             value={query}
             onChange={(e) => setQuery(e.target.value)}

@@ -1,6 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import {useState} from "react"
-import myImage from "../Uploads/AURILEOSTORE.png";
+import myImage from "../Uploads/2.png";
 
 const Navbar = ({ cart, focusSearch }) => {
   const navigate = useNavigate();

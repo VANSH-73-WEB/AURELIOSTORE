@@ -2,32 +2,42 @@ import Product from "../models/Product.js";
 import mongoose from "mongoose";
 //create product
 
-export const createProduct = async(req , res) =>{
-  try{
-    const product = new Product(req.body);
-    await product.save();
+export const createProduct = async (req, res) => {
+  try {
+    const { brand } = req.body;
 
-    res.status(201).json({
-      success: true,
-      message:"Product created",
-      product
-    });
-  }
-  catch(error){
-    res.status(500).json({message: error.message});
+    // 🔹 Check if brand exists
+    const brandExists = await Brand.findById(brand);
+    if (!brandExists) {
+      return res.status(400).json({ message: "Invalid brand ID" });
+    }
+
+    const product = await Product.create(req.body);
+    res.status(201).json(product);
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
 //get all products
+export const getProducts = async (req, res) => {
+  try {
+    const { brand } = req.query;
 
-export const  getProducts = async(req , res) =>{
-  try{
-    const products = await Product.find();
+    let filter = {};
 
-    res.status(200).json(products);
-  }
-  catch(error){
-    res.status(500).json({message: error.message});
+    // 🔹 Filter by brand
+    if (brand) {
+      filter.brand = brand;
+    }
+
+    const products = await Product.find(filter)
+      .populate("brand", "name logo"); // 👈 IMPORTANT
+
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
@@ -90,22 +100,23 @@ export const deleteProduct = async (req , res) =>{
 };
 
 //search products
-
 export const searchProducts = async (req, res) => {
   try {
-    console.log("🔥 API HIT");
+    const { q, brand } = req.query;
 
-    const q = req.query.q || "";
-    console.log("🔍 Search Query:", q) ;
+    let filter = {
+      title: { $regex: q, $options: "i" }
+    };
 
-    const products = await Product.find({
-      title: { $regex: q, $options: 'i' }
-    });
+    if (brand) {
+      filter.brand = brand;
+    }
+
+    const products = await Product.find(filter)
+      .populate("brand", "name logo");
 
     res.json(products);
-
   } catch (err) {
-    console.error("❌ ERROR:", err);
     res.status(500).json({ error: err.message });
   }
 };
