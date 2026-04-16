@@ -6,6 +6,7 @@ import authRoutes from "./routes/authroutes.js";
 import productRoutes from "./routes/productroutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import paymentRoutes from "./routes/paymentsroutes.js";
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/payment", paymentRoutes);
 
 app.listen(5000, () => {
   console.log("Server running on port 5000");

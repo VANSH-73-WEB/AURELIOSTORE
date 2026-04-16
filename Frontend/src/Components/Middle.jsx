@@ -122,9 +122,9 @@ const Middle = ({ searchInputRef, setProducts }) => {
             type="button"
             className="absolute right-1 top-1/2 -translate-y-1/2 bg-black text-white px-6 py-2 rounded-full cursor-pointer disabled:opacity-50"
             onClick={() => searchProducts()}
-            disabled={loading} // ✅ Prevent spam clicks
+            disabled={loading} 
           >
-            {loading ? "..." : "Search"} {/* ✅ Loading feedback */}
+            {loading ? "..." : "Search"} 
           </button>
         </div>
       </div>

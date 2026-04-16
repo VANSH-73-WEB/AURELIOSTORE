@@ -50,6 +50,7 @@ const hideLayout = ["/", "/register"].includes(location.pathname);
           element={<Cart cart={cart} setCart={setCart} />}
         />
         <Route path="/orders" element={<Orders />} />
+        <Route path="/brand/:id" element={<Middle searchInputRef={searchInputRef} setProducts={setProducts} />} />
         <Route path="*" element={<Notfound />} />
       </Routes>
     </main>
