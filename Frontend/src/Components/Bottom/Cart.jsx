@@ -83,10 +83,9 @@ const placeOrder = async () => {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
-
       },
-     body: JSON.stringify({
-        items: cart,                   
+      body: JSON.stringify({
+        items: cart
       })
     });
 
@@ -96,14 +95,52 @@ const placeOrder = async () => {
       throw new Error(data.message || "Order failed");
     }
 
-    toast.success("Order placed successfully ✅");
+    // 🔥 IMPORTANT PART STARTS HERE
+    const options = {
+      key: "YOUR_RAZORPAY_KEY_ID",
+      amount: data.razorpayOrder.amount,
+      currency: "INR",
+      name: "Aurelio Store",
+      description: "Order Payment",
+      order_id: data.razorpayOrder.id,
 
-   
-    setCart([]);
+      handler: async function (response) {
+        // 🔐 VERIFY PAYMENT
+        const verifyRes = await fetch(`${BASE_URL}/api/orders/verify`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify(response)
+        });
+
+        const verifyData = await verifyRes.json();
+
+        if (verifyRes.ok) {
+          toast.success("Payment successful 🎉");
+          setCart([]);
+        } else {
+          toast.error("Payment verification failed ❌");
+        }
+      },
+
+      prefill: {
+        name: "Vansh",
+        email: "vansh@gmail.com",
+        contact: "9999999999"
+      },
+
+      theme: {
+        color: "#3399cc"
+      }
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
 
   } catch (error) {
     console.error(error);
-   
     toast.error("Something went wrong ❌");
   } finally {
     setLoading(false);
