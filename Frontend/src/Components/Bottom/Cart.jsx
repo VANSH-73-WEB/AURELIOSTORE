@@ -68,8 +68,7 @@ const fetchCart = async () => {
   // Total
  const total = cart?.reduce(
   (acc, item) => acc + (item.product?.price || 0) * (item.quantity || 0),
-  0
-) || 0;
+  0 ) || 0;
 
 //place order
 const [loading, setLoading] = useState(false);
@@ -78,7 +77,7 @@ const placeOrder = async () => {
     const token = localStorage.getItem("token");
     setLoading(true);
 
-    const res = await fetch(`${BASE_URL}/api/orders/place`, {
+ const res = await fetch(`${BASE_URL}/api/payment/order`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,15 +88,19 @@ const placeOrder = async () => {
       })
     });
 
+  
     const data = await res.json();
-console.log(data);
-    if (!res.ok) {
-      throw new Error(data.message || "Order failed");
-    }
+console.log("DATA:", data);
+
+if (!data?.razorpayOrder) {
+  console.error("Invalid response:", data);
+  toast.error("Order creation failed ❌");
+  return;
+}
 
     // 🔥 IMPORTANT PART STARTS HERE
     const options = {
-      key: "YOUR_RAZORPAY_KEY_ID",
+      key: "rzp_test_Se5Te4VnkFenwc",
       amount: data.razorpayOrder.amount,
       currency: "INR",
       name: "Aurelio Store",
