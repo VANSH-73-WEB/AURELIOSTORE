@@ -1,16 +1,23 @@
 import razorpay from "../config/razorpay.js";
 import crypto from "crypto";
+import Product from "../models/Product.js"; 
+
 export const createOrder = async (req, res) => {
   try {
+    console.log("payment api hit");
     const { items } = req.body;
 
-    let totalAmount = 0;
-    items.forEach(item => {
-      totalAmount += item.product.price * item.quantity;
-    });
+const totalAmount = await Promise.all(
+  items.map(async (item) => {
+    const product = await Product.findById(item.product);
+    return product.price * item.quantity;
+  })
+);
+
+const finalAmount = totalAmount.reduce((a, b) => a + b, 0);
 
     const options = {
-      amount: totalAmount * 100,
+      amount: finalAmount * 100,
       currency: "INR",
       receipt: "order_" + Date.now()
     };
