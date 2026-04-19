@@ -66,7 +66,7 @@ const Login = () => {
       {/* Top Navigation */}
      <div
   className="absolute top-6 left-6 text-white cursor-pointer"
-  onClick={() => navigate("/")}
+  onClick={() => navigate("/home")}
 >
   ← Back to store
 </div>
