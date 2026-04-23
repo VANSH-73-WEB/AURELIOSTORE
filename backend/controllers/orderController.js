@@ -6,7 +6,7 @@ import Cart from "../models/Cart.js";
 // Place Order
 export const placeOrder = async (req, res) => {
   const userId = req.user._id;
-
+console.log("order api hit");
   const cart = await Cart.findOne({ user: userId }).populate("products.product");
 
   if (!cart || cart.products.length === 0) {

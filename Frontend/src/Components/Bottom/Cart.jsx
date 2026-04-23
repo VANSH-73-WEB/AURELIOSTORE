@@ -110,7 +110,7 @@ if (!data?.razorpayOrder) {
       handler: async function (response) {
         // 🔐 VERIFY PAYMENT
        
-  console.log("PAYMENT RESPONSE:", response);
+
 
         const verifyRes = await fetch(`${BASE_URL}/api/payment/verify`, {
           method: "POST",

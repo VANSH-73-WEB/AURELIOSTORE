@@ -35,25 +35,38 @@ const finalAmount = totalAmount.reduce((a, b) => a + b, 0);
   }
 };
 export const verifyPayment = (req, res) => {
-  const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+ 
+  const {
+    razorpay_order_id,
+    razorpay_payment_id,
+    razorpay_signature,
+  } = req.body;
 
-  const body = razorpay_order_id + "|" + razorpay_payment_id;
+  // ✅ Verify signature
+  const crypto = require("crypto");
 
-  const expectedSignature = crypto
+  const generated_signature = crypto
     .createHmac("sha256", process.env.RAZORPAY_SECRET)
-    .update(body)
+    .update(razorpay_order_id + "|" + razorpay_payment_id)
     .digest("hex");
 
-  if (expectedSignature === razorpay_signature) {
-   
-    return res.json({
-      success: true,
-      message: "Payment verified successfully"
-    });
-  } else {
-    return res.status(400).json({
-      success: false,
-      message: "Invalid signature"
-    });
+  if (generated_signature !== razorpay_signature) {
+    return res.json({ success: false });
   }
+
+  // ✅ CREATE ORDER IN DB
+  await Order.create({
+    userId: req.user.id,
+    paymentId: razorpay_payment_id,
+    orderId: razorpay_order_id,
+    status: "paid",
+    items: req.user.cart   // or fetch cart separately
+  });
+
+  // ✅ CLEAR CART IN DB
+  await User.findByIdAndUpdate(req.user.id, {
+    cart: []
+  });
+
+  res.json({ success: true });
 };
