@@ -4,7 +4,7 @@ import Product from "../models/Product.js";
 
 export const createOrder = async (req, res) => {
   try {
-    console.log("payment api hit");
+    
     const { items } = req.body;
 
 const totalAmount = await Promise.all(
