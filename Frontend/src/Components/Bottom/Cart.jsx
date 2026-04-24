@@ -107,28 +107,27 @@ if (!data?.razorpayOrder) {
       description: "Order Payment",
       order_id: data.razorpayOrder.id,
 
-      handler: async function (response) {
-        // 🔐 VERIFY PAYMENT
-       
+     handler: async function (response) {
+  const verifyRes = await fetch(`${BASE_URL}/api/payment/verify`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    },
+    body: JSON.stringify(response)
+  });
 
+  const verifyData = await verifyRes.json();
+console.log("VERIFY RESPONSE:", verifyData);
+  if (verifyData.success) {
+    toast.success("Payment successful 🎉");
+    setCart([]);
+    // optionally redirect
+    // navigate("/orders");
+  } else {
+    toast.error("Payment verification failed ❌");
+  }
 
-        const verifyRes = await fetch(`${BASE_URL}/api/payment/verify`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify(response)
-        });
-
-        const verifyData = await verifyRes.json();
-
-        if (verifyRes.ok) {
-          toast.success("Payment successful 🎉");
-          setCart([]);
-        } else {
-          toast.error("Payment verification failed ❌");
-        }
       },
 
       prefill: {
