@@ -1,143 +1,138 @@
-import  { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import myImage from "../Uploads/AURILEOSTORE.png";
+import BASE_URL from "../config/api";
 
-const BASE_URL = "https://aurelio-backend-ztel.onrender.com";
 const Login = () => {
-  
- const navigate = useNavigate();
- const [formData, setFormData] = useState({
-    email: "",
-    password: ""
-  });
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-      setError("");
-       console.log("Form Submitted");  
-  
+    setError("");
+    setLoading(true);
+    try {
+      const response = await fetch(`${BASE_URL}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(formData),
+      });
 
-  try{
-    const response = await fetch(`${BASE_URL}/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-       credentials: "include",
-      body: JSON.stringify(formData)
-    });
-
-   
       const data = await response.json();
-     
-
-
       if (response.ok) {
-       
-        if (data.token) {
-          localStorage.setItem("token", data.token);
-        }
- 
-  localStorage.setItem("userInfo", JSON.stringify(data));
-    navigate("/home");
-   
+        if (data.token) localStorage.setItem("token", data.token);
+        localStorage.setItem("userInfo", JSON.stringify(data));
+        navigate("/home");
       } else {
-        setError(data.message || "Login failed");
+        setError(data.message || "Invalid email or password.");
       }
-
-    } catch (error) {
-      console.log("Error during login:", error);
-
-      setError("Server error. Try again later.");
+    } catch {
+      setError("Server error. Please try again later.");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-linear-to-br from-teal-700 to-teal-900 flex items-center justify-center relative">
+    <div className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-900 to-teal-800 flex">
 
-      {/* Top Navigation */}
-     <div
-  className="absolute top-6 left-6 text-white cursor-pointer"
-  onClick={() => navigate("/home")}
->
-  ← Back to store
-</div>
-
-      <div className="absolute top-6 right-6 text-white">
-        Not a member?{" "}
-        <span className="border px-3 py-1 rounded cursor-pointer hover:bg-white hover:text-teal-800 transition " onClick={() => navigate("/register")}>
-          Sign Up
-        </span>
+      {/* Left Panel — branding */}
+      <div className="hidden lg:flex flex-1 items-center justify-center p-16 text-white">
+        <div className="max-w-sm">
+          <img src={myImage} alt="Logo" className="w-20 h-20 object-contain mb-8 opacity-90" />
+          <h1 className="font-raleway text-5xl font-thin tracking-[0.15em] uppercase mb-4 leading-tight">
+            Aurelio<br />Store
+          </h1>
+          <p className="text-white/60 text-sm leading-relaxed">
+            Premium fashion & lifestyle products crafted for elegance and everyday comfort.
+          </p>
+          <div className="flex gap-4 mt-10">
+            {["Free shipping", "Easy returns", "Secure checkout"].map((t) => (
+              <span key={t} className="text-xs text-white/50 border border-white/20 px-2 py-1 rounded-full">
+                {t}
+              </span>
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Login Card */}
-      <div className="bg-white/10 backdrop-blur-md p-10 rounded-lg w-[350px] shadow-lg text-white">
+      {/* Right Panel — form */}
+      <div className="flex-1 flex items-center justify-center p-6">
+        <div className="bg-white/10 backdrop-blur-xl rounded-3xl p-8 md:p-10 w-full max-w-sm shadow-2xl border border-white/10 text-white">
 
-        <div className="flex justify-center mb-8">
-  <div className="w-16 h-16 clip-path-custom flex items-center justify-center">
-    <img
-      src={myImage}
-      alt="Logo"
-      className="w-full h-full object-contain"
-    />
-  </div>
-</div>
-
-        <form onSubmit={handleSubmit} autoComplete="off" className="space-y-6">
-
-          {/* Email */}
-          <div>
-            <label className="block text-sm mb-2">EMAIL ADDRESS</label>
-           <input
-  type="email"
-  name="email"
-  autoComplete="email"
-  value={formData.email}
-  onChange={handleChange}
-  placeholder="demo@modonotebooks.com"
-  className="w-full bg-transparent border-b border-gray-300 py-2 
-  focus:outline-none focus:border-white 
-  focus:ring-2 focus:ring-teal-300 focus:ring-opacity-50 transition duration-300"
-  required
-/>
+          {/* Mobile logo */}
+          <div className="lg:hidden flex justify-center mb-6">
+            <img src={myImage} alt="Logo" className="w-14 h-14 object-contain" />
           </div>
 
-          {/* Password */}
-          <div>
-            <label className="block text-sm mb-2">PASSWORD</label>
-            <input
-  type="password"
-  name="password"
-  autoComplete="new-password"
-  value={formData.password}
-  onChange={handleChange}
-  placeholder="********"
-  className="w-full bg-transparent border-b border-gray-300 py-2 
-  focus:outline-none focus:border-white 
-  focus:ring-2 focus:ring-teal-300 focus:ring-opacity-50 transition duration-300"
-  required
-/>
-          </div>
+          <h2 className="text-2xl font-light mb-1">Welcome back</h2>
+          <p className="text-white/50 text-sm mb-8">Sign in to your account</p>
 
-          {/* Button */}
-          <button
-            type="submit"
-            onClick={handleSubmit}
-            className="w-full bg-white text-teal-700 py-3 rounded-lg font-semibold 
-  hover:bg-gray-200 transition duration-300"
-          >
-            Login
-          </button>
+          {error && (
+            <div className="bg-red-500/20 border border-red-400/30 text-red-200 text-sm px-4 py-3 rounded-xl mb-5">
+              {error}
+            </div>
+          )}
 
-        </form>
+          <form onSubmit={handleSubmit} autoComplete="off" className="space-y-5">
+            <div>
+              <label className="block text-xs text-white/60 mb-2 uppercase tracking-widest">
+                Email Address
+              </label>
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-white/50 focus:ring-2 focus:ring-white/10 transition"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs text-white/60 mb-2 uppercase tracking-widest">
+                Password
+              </label>
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                className="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-white/30 focus:outline-none focus:border-white/50 focus:ring-2 focus:ring-white/10 transition"
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-white text-blue-950 py-3 rounded-xl font-semibold hover:bg-gray-100 transition disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            >
+              {loading ? (
+                <><i className="ri-loader-4-line animate-spin" /> Signing in...</>
+              ) : "Sign In"}
+            </button>
+          </form>
+
+          <p className="text-sm text-center text-white/50 mt-6">
+            New here?{" "}
+            <button
+              onClick={() => navigate("/register")}
+              className="text-white underline underline-offset-2 hover:text-white/80 transition"
+            >
+              Create an account
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );

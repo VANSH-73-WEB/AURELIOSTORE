@@ -6,11 +6,7 @@ const BASE_URL = "http://localhost:5000"; // change if deployed
 export default function Brands() {
   const [brands, setBrands] = useState([]);
   const [search, setSearch] = useState("");
-
-  useEffect(() => {
-    fetchBrands();
-  }, []);
-
+  
   const fetchBrands = async () => {
     try {
       const res = await axios.get(`${BASE_URL}/api/brands`);
@@ -19,10 +15,14 @@ export default function Brands() {
       console.log(err);
     }
   };
-
+  
   const filteredBrands = brands.filter((b) =>
     b.name.toLowerCase().includes(search.toLowerCase())
-  );
+);
+
+  useEffect(() => {
+    fetchBrands();
+  }, []);
 
   return (
     <div className="w-full min-h-screen bg-[#f5f5f5] p-6">

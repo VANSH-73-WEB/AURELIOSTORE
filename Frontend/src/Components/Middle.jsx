@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-
-const BASE_URL = "https://aurelio-backend-ztel.onrender.com";
+import BASE_URL from "../config/api";
 
 const Middle = ({ searchInputRef, setProducts }) => {
   const [query, setQuery] = useState("");
@@ -10,18 +9,15 @@ const Middle = ({ searchInputRef, setProducts }) => {
 
   const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-  // ✅ Unified search function
   const searchProducts = async (searchQuery = query) => {
     if (!searchQuery.trim()) {
       setProducts([]);
       return;
     }
     setLoading(true);
-    setShowDropdown(false); // ✅ Close dropdown on search
+    setShowDropdown(false);
     try {
-      const res = await fetch(
-        `${BASE_URL}/api/products/search?q=${encodeURIComponent(searchQuery)}`
-      );
+      const res = await fetch(`${BASE_URL}/api/products/search?q=${encodeURIComponent(searchQuery)}`);
       if (!res.ok) throw new Error("Search failed");
       const data = await res.json();
       setProducts(data);
@@ -32,100 +28,99 @@ const Middle = ({ searchInputRef, setProducts }) => {
     }
   };
 
-  // ✅ Suggestions with debounce
   useEffect(() => {
     if (query.trim().length < 2) {
       setSuggestions([]);
-      setShowDropdown(false); // ✅ Fix flicker on clear
+      setShowDropdown(false);
       return;
     }
-
     const delay = setTimeout(() => {
       fetch(`${BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`)
-        .then((res) => {
-          if (!res.ok) throw new Error("Suggestion fetch failed");
-          return res.json();
-        })
-        .then((data) => {
-          setSuggestions(data);
-          setShowDropdown(true);
-        })
-        .catch((err) => {
-          console.error("Suggestion error:", err);
-          setSuggestions([]);
-        });
+        .then((res) => { if (!res.ok) throw new Error(); return res.json(); })
+        .then((data) => { setSuggestions(data); setShowDropdown(true); })
+        .catch(() => setSuggestions([]));
     }, 300);
-
     return () => clearTimeout(delay);
   }, [query]);
 
   return (
-    <div className="flex justify-center items-center">
-      <img
-        className="w-full h-[500px] shadow-lg"
-        src="https://i.pinimg.com/1200x/ea/c5/d0/eac5d0031ac7f7f745ac1f21ba73a7e7.jpg"
-        alt="banner"
-      />
+    <div className="relative w-full overflow-hidden">
+      {/* Hero Banner */}
+      <div className="relative h-[480px] md:h-[560px] w-full">
+        <img
+          className="w-full h-full object-cover"
+          src="https://i.pinimg.com/1200x/ea/c5/d0/eac5d0031ac7f7f745ac1f21ba73a7e7.jpg"
+          alt="Aurelio Store Banner"
+        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-transparent to-black/60" />
 
-      <h1 className="absolute top-11 bg-linear-to-t from-red-500 to-blue-500 bg-clip-text text-transparent font-raleway font-normal text-[300px] tracking-[0.15em]">
-        Shop
-      </h1>
+        {/* Hero text */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <p className="text-white/70 text-sm tracking-[0.3em] uppercase mb-2 font-light">
+            Premium Fashion & Lifestyle
+          </p>
+          <h1 className="text-white font-raleway font-thin text-5xl md:text-7xl xl:text-8xl tracking-[0.1em] uppercase drop-shadow-2xl">
+            Shop
+          </h1>
+          <p className="text-white/80 text-base md:text-lg mt-4 max-w-md">
+            Discover curated collections crafted for elegance
+          </p>
+        </div>
+      </div>
 
-      <div className="absolute w-340 h-30 bg-white rounded-tl-2xl rounded-tr-2xl top-100 flex">
-        <h1 className="font-raleway text-4xl ml-3 mt-3">Give All You Need</h1>
+      {/* Search Bar — floating card below hero */}
+      <div className="bg-white shadow-xl rounded-2xl mx-4 md:mx-20 xl:mx-40 -mt-10 relative z-10 px-6 py-5 flex flex-col sm:flex-row items-center gap-4">
+        <h2 className="font-raleway text-lg md:text-2xl text-gray-800 font-light whitespace-nowrap shrink-0">
+          What are you looking for?
+        </h2>
 
-        <div className="absolute top-5 right-39 cursor-pointer">
+        <div className="relative flex-1 w-full">
+          <i className="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-lg" />
           <input
-            autoFocus
             ref={searchInputRef}
-            className="bg-white w-200 h-[45px] text-gray-600 rounded-full border border-gray-300 outline-none pl-10 pr-25"
-            placeholder="Search on Aurileo"
+            className="w-full h-11 bg-gray-50 text-gray-700 rounded-full border border-gray-200 outline-none pl-10 pr-28 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 transition"
+            placeholder="Search products, brands..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={() => suggestions.length && setShowDropdown(true)}
             onBlur={() => setTimeout(() => setShowDropdown(false), 200)}
-            onKeyDown={(e) => e.key === "Enter" && searchProducts()} // ✅ Enter key
+            onKeyDown={(e) => e.key === "Enter" && searchProducts()}
           />
-
-          <i className="ri-search-line absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+          <button
+            type="button"
+            className="absolute right-1 top-1/2 -translate-y-1/2 bg-blue-950 text-white px-5 py-2 rounded-full text-sm cursor-pointer disabled:opacity-50 hover:bg-blue-800 transition"
+            onClick={() => searchProducts()}
+            disabled={loading}
+          >
+            {loading ? "..." : "Search"}
+          </button>
 
           {/* Dropdown */}
           {showDropdown && suggestions.length > 0 && (
-            <div className="absolute top-[50px] left-0 bg-white border w-full rounded-xl shadow-lg z-50 max-h-[250px] overflow-y-auto">
+            <div className="absolute top-[48px] left-0 bg-white border border-gray-100 w-full rounded-xl shadow-xl z-50 max-h-60 overflow-y-auto">
               {suggestions.map((item) => (
                 <div
                   key={item._id}
-                  className="p-3 hover:bg-gray-100 cursor-pointer flex justify-between items-center"
-                  onMouseDown={() => { // ✅ onMouseDown avoids onBlur race condition
+                  className="px-4 py-3 hover:bg-blue-50 cursor-pointer flex items-center gap-3 text-sm text-gray-700 border-b last:border-0"
+                  onMouseDown={() => {
                     setQuery(item.title);
                     setShowDropdown(false);
-                    searchProducts(item.title); // ✅ Pass selected title directly
+                    searchProducts(item.title);
                   }}
                 >
+                  <i className="ri-search-line text-gray-400 text-xs" />
                   <span>
-                    {item.title
-                      .split(new RegExp(`(${escapeRegex(query)})`, "gi"))
-                      .map((part, i) =>
-                        part.toLowerCase() === query.toLowerCase() ? (
-                          <b key={i} className="text-black">{part}</b>
-                        ) : (
-                          part
-                        )
-                      )}
+                    {item.title.split(new RegExp(`(${escapeRegex(query)})`, "gi")).map((part, i) =>
+                      part.toLowerCase() === query.toLowerCase()
+                        ? <b key={i} className="text-blue-800">{part}</b>
+                        : part
+                    )}
                   </span>
                 </div>
               ))}
             </div>
           )}
-
-          <button
-            type="button"
-            className="absolute right-1 top-1/2 -translate-y-1/2 bg-black text-white px-6 py-2 rounded-full cursor-pointer disabled:opacity-50"
-            onClick={() => searchProducts()}
-            disabled={loading} 
-          >
-            {loading ? "..." : "Search"} 
-          </button>
         </div>
       </div>
     </div>
