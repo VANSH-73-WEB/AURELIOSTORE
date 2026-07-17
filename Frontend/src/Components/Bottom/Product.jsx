@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import BASE_URL from "../../config/api";
+import { useNavigate } from "react-router-dom";
 
 const Product = ({ products: searchResults, cart, setCart }) => {
   const [allProducts, setAllProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [addingId, setAddingId] = useState(null);
+  const navigate = useNavigate();
+   const [loading, setLoading] = useState(false);
   const productsPerPage = 12;
 
   // Fetch all products on mount
@@ -75,6 +78,59 @@ const Product = ({ products: searchResults, cart, setCart }) => {
       </section>
     );
   }
+  
+  const placeOrder = async () => {
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      const res = await fetch(`${BASE_URL}/api/payment/order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ items: cart }),
+      });
+
+      const data = await res.json();
+      if (!data?.razorpayOrder) {
+        toast.error("Order creation failed. Please try again.");
+        return;
+      }
+
+      const options = {
+        key: "rzp_test_Se5Te4VnkFenwc",
+        amount: data.razorpayOrder.amount,
+        currency: "INR",
+        name: "Aurelio Store",
+        description: "Order Payment",
+        order_id: data.razorpayOrder.id,
+        handler: async function (response) {
+          const verifyRes = await fetch(`${BASE_URL}/api/payment/verify`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: JSON.stringify(response),
+          });
+          const verifyData = await verifyRes.json();
+          if (verifyData.success) {
+            toast.success("Payment successful! 🎉");
+            setCart([]);
+            navigate("/orders");
+          } else {
+            toast.error("Payment verification failed.");
+          }
+        },
+        prefill: { name: "Customer", email: "", contact: "" },
+        theme: { color: "#1e3a5f" },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error(error);
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   return (
     <section className="px-6 md:px-16 xl:px-20 py-10">
@@ -161,7 +217,7 @@ const Product = ({ products: searchResults, cart, setCart }) => {
                     </span>
                   )}
                 </button>
-                <button className="flex-1 py-2 bg-blue-950 text-white rounded-xl text-sm hover:bg-blue-800 transition-all duration-200">
+                <button  onClick={placeOrder} disabled={loading} className="flex-1 py-2 bg-blue-950 text-white rounded-xl text-sm hover:bg-blue-800 transition-all duration-200">
                   Buy Now
                 </button>
               </div>
