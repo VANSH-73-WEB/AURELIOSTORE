@@ -1,13 +1,14 @@
 import Product from "../models/Product.js";
+import Brand from "../models/Brand.js";
 import mongoose from "mongoose";
-//create product
 
+//create product
 export const createProduct = async (req, res) => {
   try {
     const { brand } = req.body;
 
-    // 🔹 Check if brand exists
-    const brandExists = await Brand.findById(brand);
+    // Check if brand exists
+    const brandExists = await Brand.findById(brand).lean();
     if (!brandExists) {
       return res.status(400).json({ message: "Invalid brand ID" });
     }
@@ -21,39 +22,55 @@ export const createProduct = async (req, res) => {
 };
 
 //get all products
+// Supports ?brand=<id>&category=<name>&page=1&limit=24
+// - lean() skips building full Mongoose documents (big win on large lists)
+// - pagination stops us shipping/scanning the entire collection on every load
 export const getProducts = async (req, res) => {
   try {
-    const { brand } = req.query;
+    const { brand, category, page = 1, limit = 24 } = req.query;
 
     let filter = {};
+    if (brand) filter.brand = brand;
+    if (category) filter.category = category;
 
-    // 🔹 Filter by brand
-    if (brand) {
-      filter.brand = brand;
-    }
+    const pageNum = Math.max(parseInt(page) || 1, 1);
+    const limitNum = Math.min(parseInt(limit) || 24, 100); // hard cap to avoid abuse
+    const skip = (pageNum - 1) * limitNum;
 
-    const products = await Product.find(filter)
-      .populate("brand", "name logo"); // 👈 IMPORTANT
+    const [products, total] = await Promise.all([
+      Product.find(filter)
+        .populate("brand", "name logo")
+        .select("title price image brand category stock rating createdAt")
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limitNum)
+        .lean(),
+      Product.countDocuments(filter),
+    ]);
 
-    res.json(products);
+    res.json({
+      products,
+      total,
+      page: pageNum,
+      pages: Math.ceil(total / limitNum),
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-//get single products
-
-
+//get single product
 export const getsingleProduct = async (req, res) => {
   try {
     const { id } = req.params;
-console.log("❌ ID ROUTE HIT");
-    // 🔥 THIS WILL STOP THE ERROR COMPLETELY
+
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(400).json({ message: "Invalid Product ID" });
     }
 
-    const product = await Product.findById(id);
+    const product = await Product.findById(id)
+      .populate("brand", "name logo")
+      .lean();
 
     if (!product) {
       return res.status(404).json({ message: "Product not found" });
@@ -67,10 +84,8 @@ console.log("❌ ID ROUTE HIT");
 };
 
 //update product
-
 export const updateProduct = async (req , res) =>{
   try{
-
     const product = await Product.findByIdAndUpdate(
       req.params.id,
       req.body,
@@ -84,7 +99,6 @@ export const updateProduct = async (req , res) =>{
 };
 
 //delete product
-
 export const deleteProduct = async (req , res) =>{
   try{
     await Product.findByIdAndDelete(req.params.id);
@@ -96,26 +110,59 @@ export const deleteProduct = async (req , res) =>{
     catch(error){
       res.status(500).json({ message: error.message})
     };
-  
+
 };
 
-//search products
+// full search (used when the user hits Enter / clicks Search)
+// Anchored regex ("^") can use the title index; unanchored "contains" search
+// only runs as a fallback when the anchored search returns nothing.
 export const searchProducts = async (req, res) => {
   try {
     const { q, brand } = req.query;
+    if (!q || !q.trim()) return res.json([]);
 
-    let filter = {
-      title: { $regex: q, $options: "i" }
-    };
+    const safeQ = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    let filter = { title: { $regex: "^" + safeQ, $options: "i" } };
+    if (brand) filter.brand = brand;
 
-    if (brand) {
-      filter.brand = brand;
+    let products = await Product.find(filter)
+      .populate("brand", "name logo")
+      .select("title price image brand category")
+      .limit(30)
+      .lean();
+
+    if (products.length === 0) {
+      filter.title = { $regex: safeQ, $options: "i" };
+      products = await Product.find(filter)
+        .populate("brand", "name logo")
+        .select("title price image brand category")
+        .limit(30)
+        .lean();
     }
 
-    const products = await Product.find(filter)
-      .populate("brand", "name logo");
-
     res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// lightweight autocomplete endpoint - no populate, tiny payload, capped results.
+// The search-as-you-type dropdown calls this instead of the heavier /search route.
+export const suggestProducts = async (req, res) => {
+  try {
+    const { q } = req.query;
+    if (!q || q.trim().length < 2) return res.json([]);
+
+    const safeQ = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+    const suggestions = await Product.find(
+      { title: { $regex: "^" + safeQ, $options: "i" } },
+      { title: 1 }
+    )
+      .limit(6)
+      .lean();
+
+    res.json(suggestions);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

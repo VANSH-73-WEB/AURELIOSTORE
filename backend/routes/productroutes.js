@@ -6,12 +6,13 @@ import {
   getsingleProduct,
   updateProduct,
   deleteProduct,
-  searchProducts
-  
+  searchProducts,
+  suggestProducts
 } from "../controllers/productController.js";
 
 const router = express.Router();
 //routes
+router.get("/suggest", suggestProducts);
 router.get("/search", searchProducts);
 router.get("/", getProducts);
 router.post("/create", createProduct);

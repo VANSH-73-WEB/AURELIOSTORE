@@ -38,4 +38,9 @@ const productSchema = new mongoose.Schema({
 }
 }, { timestamps: true });
 
+// Compound + text indexes so search/filter/list queries don't scan the whole collection
+productSchema.index({ title: "text", description: "text" });
+productSchema.index({ brand: 1, createdAt: -1 });
+productSchema.index({ category: 1 });
+
 export default  mongoose.model("Product", productSchema);

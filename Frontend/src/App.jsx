@@ -10,6 +10,8 @@ import Notfound from "./Components/Notfound";
 import Login from "./Components/Login";
 import Register from "./Components/Register";
 import Orders from "./Components/Bottom/Orders";
+import Brands from "./Components/Brand";
+import SingleBrand from "./Components/SingleBrand";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -50,7 +52,8 @@ const hideLayout = ["/", "/register"].includes(location.pathname);
           element={<Cart cart={cart} setCart={setCart} />}
         />
         <Route path="/orders" element={<Orders />} />
-        <Route path="/brand/:id" element={<Middle searchInputRef={searchInputRef} setProducts={setProducts} />} />
+        <Route path="/brands" element={<Brands />} />
+        <Route path="/brand/:id" element={<SingleBrand />} />
         <Route path="*" element={<Notfound />} />
       </Routes>
     </main>
