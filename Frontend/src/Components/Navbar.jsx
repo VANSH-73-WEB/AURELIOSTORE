@@ -1,11 +1,19 @@
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import myImage from "../Uploads/2.png";
+import { CATEGORIES, categoryPath } from "../config/categories";
 
 const Navbar = ({ cart, focusSearch }) => {
   const navigate = useNavigate();
   const [showMenu, setShowMenu] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [catOpen, setCatOpen] = useState(false); // desktop "Categories" dropdown
+  const [mobileCatOpen, setMobileCatOpen] = useState(false); // mobile expandable list
+
+  const closeMenus = () => {
+    setCatOpen(false);
+    setMobileOpen(false);
+  };
 
   let userInfo = null;
   try {
@@ -23,7 +31,8 @@ const Navbar = ({ cart, focusSearch }) => {
         {/* Logo + Brand */}
         <div className="flex items-center gap-3 shrink-0">
           <img src={myImage} alt="Aurelio Store" className="w-10 md:w-14 h-auto" />
-          <span className="font-raleway text-base md:text-xl font-thin tracking-widest uppercase text-white hidden sm:block">
+          {/* wordmark is hidden on tablets (md) only: the extra "Categories" link needs the room there */}
+          <span className="font-raleway text-base md:text-xl font-thin tracking-widest uppercase text-white hidden sm:block md:hidden lg:block">
             AURELIO STORE
           </span>
         </div>
@@ -31,8 +40,62 @@ const Navbar = ({ cart, focusSearch }) => {
         {/* Desktop Nav Links */}
         <div className="hidden md:flex items-center gap-6 text-white text-sm font-light tracking-wide">
           <Link to="/home" className="hover:text-gray-300 transition">Home</Link>
-          <Link to="/home" className="hover:text-gray-300 transition">Shop</Link>
-          <Link to="/home" className="hover:text-gray-300 transition">Brands</Link>
+
+          {/* Categories dropdown - opens on hover (desktop) or click/tap */}
+          <div
+            className="relative"
+            onMouseEnter={() => setCatOpen(true)}
+            onMouseLeave={() => setCatOpen(false)}
+          >
+            <button
+              type="button"
+              className="hover:text-gray-300 transition flex items-center gap-1 cursor-pointer"
+              aria-haspopup="true"
+              aria-expanded={catOpen}
+              onClick={() => setCatOpen((open) => !open)}
+            >
+              Categories
+              <i className={`ri-arrow-down-s-line text-base transition-transform ${catOpen ? "rotate-180" : ""}`} />
+            </button>
+
+            {catOpen && (
+              // pt-10 bridges the gap between the button and the panel so the
+              // hover isn't lost while the mouse travels down to it
+              <div className="absolute left-1/2 -translate-x-1/2 top-full pt-10 z-50">
+                <div className="bg-white text-gray-800 rounded-2xl shadow-2xl border border-gray-100 p-5 w-[400px] lg:w-[460px] grid grid-cols-2 gap-x-8 gap-y-5">
+                  {CATEGORIES.map((cat) => (
+                    <div key={cat.slug}>
+                      <Link
+                        to={categoryPath(cat.slug)}
+                        onClick={closeMenus}
+                        className="flex items-center gap-2 font-medium text-sm hover:text-blue-700 transition"
+                      >
+                        <i className={`${cat.icon} text-lg text-blue-950`} />
+                        {cat.name}
+                      </Link>
+                      {cat.subCategories.length > 0 && (
+                        <ul className="mt-2 ml-7 space-y-1">
+                          {cat.subCategories.map((sub) => (
+                            <li key={sub.slug}>
+                              <Link
+                                to={categoryPath(cat.slug, sub.slug)}
+                                onClick={closeMenus}
+                                className="text-sm text-gray-500 hover:text-blue-700 transition"
+                              >
+                                {sub.name}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <Link to="/brands" className="hover:text-gray-300 transition">Brands</Link>
         </div>
 
         {/* Right Icons */}
@@ -96,10 +159,48 @@ const Navbar = ({ cart, focusSearch }) => {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="md:hidden bg-blue-950/95 backdrop-blur-md mx-4 rounded-b-2xl px-6 py-4 flex flex-col gap-3 text-white text-sm">
-          <Link to="/home" onClick={() => setMobileOpen(false)}>Home</Link>
-          <Link to="/home" onClick={() => setMobileOpen(false)}>Shop</Link>
-          <Link to="/home" onClick={() => setMobileOpen(false)}>Brands</Link>
+        <div className="md:hidden bg-blue-950/95 backdrop-blur-md mx-4 rounded-b-2xl px-6 py-4 flex flex-col gap-3 text-white text-sm max-h-[75vh] overflow-y-auto">
+          <Link to="/home" onClick={closeMenus}>Home</Link>
+
+          <button
+            type="button"
+            className="text-left flex items-center justify-between"
+            aria-expanded={mobileCatOpen}
+            onClick={() => setMobileCatOpen((open) => !open)}
+          >
+            Categories
+            <i className={`ri-arrow-down-s-line text-lg transition-transform ${mobileCatOpen ? "rotate-180" : ""}`} />
+          </button>
+          {mobileCatOpen && (
+            <div className="flex flex-col gap-3 pl-3 border-l border-white/20">
+              {CATEGORIES.map((cat) => (
+                <div key={cat.slug}>
+                  <Link
+                    to={categoryPath(cat.slug)}
+                    onClick={closeMenus}
+                    className="flex items-center gap-2"
+                  >
+                    <i className={cat.icon} /> {cat.name}
+                  </Link>
+                  {cat.subCategories.length > 0 && (
+                    <div className="flex gap-4 pl-6 mt-1 text-xs text-white/70">
+                      {cat.subCategories.map((sub) => (
+                        <Link
+                          key={sub.slug}
+                          to={categoryPath(cat.slug, sub.slug)}
+                          onClick={closeMenus}
+                        >
+                          {sub.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          )}
+
+          <Link to="/brands" onClick={closeMenus}>Brands</Link>
           <button onClick={() => { focusSearch(); setMobileOpen(false); }} className="text-left">Search</button>
         </div>
       )}

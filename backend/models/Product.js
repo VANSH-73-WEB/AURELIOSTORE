@@ -19,6 +19,13 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  // Optional second level, e.g. category "Clothing" -> subCategory "Men" | "Women" | "Kids".
+  // Left empty ("") for categories that have no sub-sections (Electronics, Furniture, ...).
+  subCategory: {
+    type: String,
+    default: "",
+    trim: true
+  },
   image: {
     type: String,
     required: true
@@ -41,6 +48,6 @@ const productSchema = new mongoose.Schema({
 // Compound + text indexes so search/filter/list queries don't scan the whole collection
 productSchema.index({ title: "text", description: "text" });
 productSchema.index({ brand: 1, createdAt: -1 });
-productSchema.index({ category: 1 });
+productSchema.index({ category: 1, subCategory: 1 });
 
 export default  mongoose.model("Product", productSchema);

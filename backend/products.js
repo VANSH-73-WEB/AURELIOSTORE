@@ -213,6 +213,8 @@ import Product from "./models/Product.js";
 import Brand from "./models/Brand.js";
 
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -234,6 +236,73 @@ export const brands = [
     logo: "https://via.placeholder.com/150?text=HomeLine",
     description: "Furniture and home essentials",
   },
+  {
+    name: "Aurelio Wear",
+    logo: "/products/brand-aurelio-wear.svg",
+    description: "Everyday clothing for men, women and kids",
+  },
+  {
+    name: "Stride",
+    logo: "/products/brand-stride.svg",
+    description: "Footwear for the whole family",
+  },
+];
+
+// ---------------------------------------------------------------------------
+// New sections: Clothing (Men / Women / Kids), Footwear (Men / Women / Kids),
+// plus more Electronics and Furniture.
+//
+// `category` and `subCategory` must match Frontend/src/config/categories.js.
+// Images are simple local placeholders served from Frontend/public/products -
+// replace `image` with real product photos whenever you have them.
+// Prices are in INR.
+// ---------------------------------------------------------------------------
+const img = (name) => `/products/${name}.svg`;
+
+const newProducts = [
+  // ---- Clothing / Men ----
+  { title: "Slim Fit Denim Jeans", description: "Stretch denim, slim fit, mid rise", price: 1499, category: "Clothing", subCategory: "Men", image: img("clothing-men"), stock: 30, rating: 4, brandName: "Aurelio Wear" },
+  { title: "Cotton Casual Shirt", description: "Breathable pure cotton, regular fit", price: 899, category: "Clothing", subCategory: "Men", image: img("clothing-men"), stock: 40, rating: 4, brandName: "Aurelio Wear" },
+  { title: "Classic Polo T-Shirt", description: "Soft pique cotton polo", price: 599, category: "Clothing", subCategory: "Men", image: img("clothing-men"), stock: 50, rating: 4, brandName: "Aurelio Wear" },
+  { title: "Bomber Jacket", description: "Lightweight zip-up bomber jacket", price: 2999, category: "Clothing", subCategory: "Men", image: img("clothing-men"), stock: 15, rating: 5, brandName: "Aurelio Wear" },
+  { title: "Formal Trousers", description: "Wrinkle-resistant office trousers", price: 1299, category: "Clothing", subCategory: "Men", image: img("clothing-men"), stock: 25, rating: 4, brandName: "Aurelio Wear" },
+
+  // ---- Clothing / Women ----
+  { title: "Floral Summer Dress", description: "Flowy knee-length floral dress", price: 1799, category: "Clothing", subCategory: "Women", image: img("clothing-women"), stock: 20, rating: 5, brandName: "Aurelio Wear" },
+  { title: "Embroidered Cotton Kurti", description: "Hand-embroidered straight-cut kurti", price: 1199, category: "Clothing", subCategory: "Women", image: img("clothing-women"), stock: 35, rating: 4, brandName: "Aurelio Wear" },
+  { title: "High-Waist Skinny Jeans", description: "Stretch denim, high-waist fit", price: 1599, category: "Clothing", subCategory: "Women", image: img("clothing-women"), stock: 28, rating: 4, brandName: "Aurelio Wear" },
+  { title: "Knit Cardigan", description: "Warm open-front knit cardigan", price: 1399, category: "Clothing", subCategory: "Women", image: img("clothing-women"), stock: 18, rating: 4, brandName: "Aurelio Wear" },
+  { title: "Silk Blend Saree", description: "Elegant silk blend saree with blouse piece", price: 2499, category: "Clothing", subCategory: "Women", image: img("clothing-women"), stock: 12, rating: 5, brandName: "Aurelio Wear" },
+
+  // ---- Clothing / Kids ----
+  { title: "Kids Graphic T-Shirt", description: "Soft cotton tee with fun print", price: 449, category: "Clothing", subCategory: "Kids", image: img("clothing-kids"), stock: 60, rating: 4, brandName: "Aurelio Wear" },
+  { title: "Kids Hooded Sweatshirt", description: "Fleece-lined hoodie for cooler days", price: 799, category: "Clothing", subCategory: "Kids", image: img("clothing-kids"), stock: 30, rating: 4, brandName: "Aurelio Wear" },
+  { title: "Girls Party Frock", description: "Layered party frock with bow detail", price: 999, category: "Clothing", subCategory: "Kids", image: img("clothing-kids"), stock: 22, rating: 5, brandName: "Aurelio Wear" },
+  { title: "Boys Cargo Shorts", description: "Durable cotton cargo shorts", price: 599, category: "Clothing", subCategory: "Kids", image: img("clothing-kids"), stock: 35, rating: 4, brandName: "Aurelio Wear" },
+  { title: "Kids Pyjama Set", description: "Comfy two-piece cotton night set", price: 549, category: "Clothing", subCategory: "Kids", image: img("clothing-kids"), stock: 40, rating: 4, brandName: "Aurelio Wear" },
+
+  // ---- Footwear ----
+  { title: "Running Shoes", description: "Cushioned mesh running shoes", price: 2499, category: "Footwear", subCategory: "Men", image: img("footwear-men"), stock: 24, rating: 4, brandName: "Stride" },
+  { title: "Leather Formal Shoes", description: "Classic lace-up leather oxfords", price: 2999, category: "Footwear", subCategory: "Men", image: img("footwear-men"), stock: 16, rating: 4, brandName: "Stride" },
+  { title: "Block Heel Sandals", description: "Comfortable block heels for all-day wear", price: 1899, category: "Footwear", subCategory: "Women", image: img("footwear-women"), stock: 20, rating: 4, brandName: "Stride" },
+  { title: "Casual White Sneakers", description: "Clean everyday low-top sneakers", price: 1999, category: "Footwear", subCategory: "Women", image: img("footwear-women"), stock: 26, rating: 5, brandName: "Stride" },
+  { title: "Kids Sports Shoes", description: "Lightweight, grippy school sports shoes", price: 1299, category: "Footwear", subCategory: "Kids", image: img("footwear-kids"), stock: 32, rating: 4, brandName: "Stride" },
+  { title: "Kids Velcro Sandals", description: "Easy-fasten summer sandals", price: 699, category: "Footwear", subCategory: "Kids", image: img("footwear-kids"), stock: 38, rating: 4, brandName: "Stride" },
+
+  // ---- Electronics ----
+  { title: "Smartphone 128GB", description: "6.5-inch AMOLED display, 50MP camera", price: 18999, category: "Electronics", image: img("electronics"), stock: 20, rating: 4, brandName: "Aurelio Essentials" },
+  { title: "14-inch Laptop", description: "Thin and light, 16GB RAM, 512GB SSD", price: 42999, category: "Electronics", image: img("electronics"), stock: 10, rating: 4, brandName: "Aurelio Essentials" },
+  { title: "43-inch Smart TV", description: "4K UHD smart TV with built-in streaming apps", price: 26999, category: "Electronics", image: img("electronics"), stock: 8, rating: 4, brandName: "Aurelio Essentials" },
+  { title: "Bluetooth Speaker", description: "Portable waterproof speaker, 12h battery", price: 2499, category: "Electronics", image: img("electronics"), stock: 34, rating: 4, brandName: "Aurelio Essentials" },
+  { title: "10-inch Tablet", description: "Wi-Fi tablet for reading, study and streaming", price: 14999, category: "Electronics", image: img("electronics"), stock: 14, rating: 4, brandName: "Aurelio Essentials" },
+
+  // ---- Furniture ----
+  { title: "3-Seater Fabric Sofa", description: "Comfortable sofa with solid wood frame", price: 24999, category: "Furniture", image: img("furniture"), stock: 6, rating: 5, brandName: "HomeLine" },
+  { title: "6-Seater Dining Table", description: "Sheesham wood dining table", price: 18999, category: "Furniture", image: img("furniture"), stock: 5, rating: 4, brandName: "HomeLine" },
+  { title: "Queen Size Bed", description: "Engineered wood bed with headboard", price: 21999, category: "Furniture", image: img("furniture"), stock: 7, rating: 4, brandName: "HomeLine" },
+  { title: "5-Shelf Bookcase", description: "Open bookcase, walnut finish", price: 5999, category: "Furniture", image: img("furniture"), stock: 12, rating: 4, brandName: "HomeLine" },
+  { title: "Wooden Coffee Table", description: "Compact centre table with lower shelf", price: 6499, category: "Furniture", image: img("furniture"), stock: 10, rating: 4, brandName: "HomeLine" },
+  { title: "3-Door Wardrobe", description: "Spacious wardrobe with mirror and drawers", price: 16999, category: "Furniture", image: img("furniture"), stock: 4, rating: 4, brandName: "HomeLine" },
 ];
 
 export const products = [
@@ -435,8 +504,11 @@ export const products = [
     stock: 40,
     brandName: "Aurelio Essentials",
   },
+  ...newProducts,
 ];
 
+// WARNING: this script WIPES all existing products and brands before re-inserting
+// the lists above. Run it with `node products.js`.
 const seedDatabase = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI);
@@ -464,4 +536,8 @@ const seedDatabase = async () => {
   }
 };
 
-seedDatabase();
+// Only run when this file is executed directly (`node products.js`), so importing
+// `brands` / `products` from another file can never wipe the database by accident.
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  seedDatabase();
+}

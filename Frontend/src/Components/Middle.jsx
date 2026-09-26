@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import BASE_URL from "../config/api";
 
 const Middle = ({ searchInputRef, setProducts }) => {
@@ -6,6 +7,20 @@ const Middle = ({ searchInputRef, setProducts }) => {
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  // The navbar search icon on other pages sends people here with
+  // state.focusSearch, so land on the search box and focus it.
+  useEffect(() => {
+    if (!location.state?.focusSearch) return;
+    const input = searchInputRef?.current;
+    if (!input) return;
+    input.scrollIntoView({ behavior: "smooth", block: "center" });
+    input.focus({ preventScroll: true });
+    // one-shot: clear it so a page reload doesn't jump to the search box again
+    navigate(location.pathname, { replace: true, state: null });
+  }, [location.state, location.pathname, navigate, searchInputRef]);
 
   const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
@@ -35,7 +50,7 @@ const Middle = ({ searchInputRef, setProducts }) => {
       return;
     }
     const delay = setTimeout(() => {
-      fetch(`${BASE_URL}/api/products/search?q=${encodeURIComponent(query)}`)
+      fetch(`${BASE_URL}/api/products/suggest?q=${encodeURIComponent(query)}`)
         .then((res) => { if (!res.ok) throw new Error(); return res.json(); })
         .then((data) => { setSuggestions(data); setShowDropdown(true); })
         .catch(() => setSuggestions([]));
@@ -44,9 +59,12 @@ const Middle = ({ searchInputRef, setProducts }) => {
   }, [query]);
 
   return (
-    <div className="relative w-full overflow-hidden">
-      {/* Hero Banner */}
-      <div className="relative h-[480px] md:h-[560px] w-full">
+    // No overflow-hidden here: the suggestions dropdown hangs below the search card,
+    // which is the last thing in this wrapper, so overflow-hidden would clip it.
+    // z-20 keeps the whole block (and its dropdown) above the product grid below.
+    <div className="relative z-20 w-full">
+      {/* Hero Banner (overflow is clipped here instead, just around the image) */}
+      <div className="relative h-[480px] md:h-[560px] w-full overflow-hidden">
         <img
           className="w-full h-full object-cover"
           src="https://i.pinimg.com/1200x/ea/c5/d0/eac5d0031ac7f7f745ac1f21ba73a7e7.jpg"
@@ -102,7 +120,7 @@ const Middle = ({ searchInputRef, setProducts }) => {
               {suggestions.map((item) => (
                 <div
                   key={item._id}
-                  className="px-4 py-3 hover:bg-blue-50 cursor-pointer flex items-center gap-3 text-sm text-gray-700 border-b last:border-0"
+                  className="px-4 py-3 hover:bg-blue-50 cursor-pointer flex items-center gap-3 text-sm text-gray-700 border-b border-gray-100 last:border-0"
                   onMouseDown={() => {
                     setQuery(item.title);
                     setShowDropdown(false);

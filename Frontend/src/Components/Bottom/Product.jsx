@@ -4,7 +4,19 @@ import BASE_URL from "../../config/api";
 
 const PRODUCTS_PER_PAGE = 12;
 
-const Product = ({ products: searchResults, cart, setCart }) => {
+// Optional props (used by the category pages):
+//   category / subCategory - only load products from that section
+//   title / emptyMessage   - heading and empty-state text
+// On the home page none of these are passed, so it behaves exactly as before.
+const Product = ({
+  products: searchResults,
+  cart,
+  setCart,
+  category,
+  subCategory,
+  title = "All Products",
+  emptyMessage = "No products found. Try a different search.",
+}) => {
   const [allProducts, setAllProducts] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -21,7 +33,11 @@ const Product = ({ products: searchResults, cart, setCart }) => {
     let ignore = false;
     setLoadingProducts(true);
 
-    fetch(`${BASE_URL}/api/products?page=${currentPage}&limit=${PRODUCTS_PER_PAGE}`)
+    const params = new URLSearchParams({ page: currentPage, limit: PRODUCTS_PER_PAGE });
+    if (category) params.set("category", category);
+    if (subCategory) params.set("subCategory", subCategory);
+
+    fetch(`${BASE_URL}/api/products?${params}`)
       .then((res) => res.json())
       .then((data) => {
         if (ignore) return;
@@ -35,7 +51,7 @@ const Product = ({ products: searchResults, cart, setCart }) => {
       .finally(() => { if (!ignore) setLoadingProducts(false); });
 
     return () => { ignore = true; };
-  }, [currentPage, isSearching]);
+  }, [currentPage, isSearching, category, subCategory]);
 
   // Reset to page 1 whenever a new search is run
   useEffect(() => {
@@ -96,7 +112,7 @@ const Product = ({ products: searchResults, cart, setCart }) => {
       <section className="px-6 md:px-20 py-16 text-center">
         <div className="flex flex-col items-center gap-3 text-gray-400">
           <i className="ri-store-2-line text-5xl" />
-          <p className="text-lg">No products found. Try a different search.</p>
+          <p className="text-lg">{emptyMessage}</p>
         </div>
       </section>
     );
@@ -107,7 +123,7 @@ const Product = ({ products: searchResults, cart, setCart }) => {
       {/* Section Header */}
       <div className="flex items-center justify-between mb-8">
         <h2 className="text-2xl font-light text-gray-800 tracking-wide">
-          {isSearching ? `${searchResults.length} results` : "All Products"}
+          {isSearching ? `${searchResults.length} results` : title}
         </h2>
         {!isSearching && (
           <p className="text-sm text-gray-400">
@@ -132,7 +148,7 @@ const Product = ({ products: searchResults, cart, setCart }) => {
                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                 onError={(e) => {
                   e.currentTarget.onerror = null;
-                  e.currentTarget.src = "https://via.placeholder.com/300?text=" + encodeURIComponent(item.title || "Product");
+                  e.currentTarget.src = "/products/placeholder.svg";
                 }}
               />
               {/* Quick view overlay */}

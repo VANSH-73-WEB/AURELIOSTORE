@@ -1,3 +1,14 @@
+import { Link } from "react-router-dom";
+
+const shopLinks = [
+  { label: "Men", to: "/category/clothing/men" },
+  { label: "Women", to: "/category/clothing/women" },
+  { label: "Kids", to: "/category/clothing/kids" },
+  { label: "Electronics", to: "/category/electronics" },
+  { label: "Furniture", to: "/category/furniture" },
+  { label: "Accessories", to: "/category/accessories" },
+];
+
 const Footer = () => {
   return (
     <footer className="bg-blue-950 text-gray-300 mt-20
@@ -25,9 +36,11 @@ const Footer = () => {
         <div>
           <h3 className="text-white font-semibold mb-4">Shop</h3>
           <ul className="space-y-2 text-sm">
-            <li className="hover:text-white cursor-pointer">Men</li>
-            <li className="hover:text-white cursor-pointer">Women</li>
-            <li className="hover:text-white cursor-pointer">Accessories</li>
+            {shopLinks.map((link) => (
+              <li key={link.to}>
+                <Link to={link.to} className="hover:text-white">{link.label}</Link>
+              </li>
+            ))}
             <li className="hover:text-white cursor-pointer">New Arrivals</li>
           </ul>
         </div>

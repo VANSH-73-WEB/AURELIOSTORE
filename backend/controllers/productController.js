@@ -2,6 +2,9 @@ import Product from "../models/Product.js";
 import Brand from "../models/Brand.js";
 import mongoose from "mongoose";
 
+// Escape user input before putting it inside a RegExp
+const escapeRegex = (str) => str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 //create product
 export const createProduct = async (req, res) => {
   try {
@@ -22,16 +25,17 @@ export const createProduct = async (req, res) => {
 };
 
 //get all products
-// Supports ?brand=<id>&category=<name>&page=1&limit=24
+// Supports ?brand=<id>&category=<name>&subCategory=<name>&page=1&limit=24
 // - lean() skips building full Mongoose documents (big win on large lists)
 // - pagination stops us shipping/scanning the entire collection on every load
 export const getProducts = async (req, res) => {
   try {
-    const { brand, category, page = 1, limit = 24 } = req.query;
+    const { brand, category, subCategory, page = 1, limit = 24 } = req.query;
 
     let filter = {};
     if (brand) filter.brand = brand;
     if (category) filter.category = category;
+    if (subCategory) filter.subCategory = subCategory;
 
     const pageNum = Math.max(parseInt(page) || 1, 1);
     const limitNum = Math.min(parseInt(limit) || 24, 100); // hard cap to avoid abuse
@@ -40,7 +44,7 @@ export const getProducts = async (req, res) => {
     const [products, total] = await Promise.all([
       Product.find(filter)
         .populate("brand", "name logo")
-        .select("title price image brand category stock rating createdAt")
+        .select("title price image brand category subCategory stock rating createdAt")
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limitNum)
@@ -114,30 +118,40 @@ export const deleteProduct = async (req , res) =>{
 };
 
 // full search (used when the user hits Enter / clicks Search)
-// Anchored regex ("^") can use the title index; unanchored "contains" search
-// only runs as a fallback when the anchored search returns nothing.
+// Optional narrowing: ?brand=<id>&category=<name>&subCategory=<name>
+//
+// Two passes so results stay relevant:
+//   1) "starts with" on title, category or sub-category - so typing "men" finds
+//      Men's clothing (subCategory "Men") but NOT "Women", and typing
+//      "furniture" returns the Furniture section.
+//   2) only if pass 1 found nothing: title "contains" as a fallback
+//      (e.g. "jeans" -> "Slim Fit Jeans").
 export const searchProducts = async (req, res) => {
   try {
-    const { q, brand } = req.query;
+    const { q, brand, category, subCategory } = req.query;
     if (!q || !q.trim()) return res.json([]);
 
-    const safeQ = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    let filter = { title: { $regex: "^" + safeQ, $options: "i" } };
-    if (brand) filter.brand = brand;
+    const safeQ = escapeRegex(q.trim());
 
-    let products = await Product.find(filter)
-      .populate("brand", "name logo")
-      .select("title price image brand category")
-      .limit(30)
-      .lean();
+    const scope = {};
+    if (brand) scope.brand = brand;
+    if (category) scope.category = category;
+    if (subCategory) scope.subCategory = subCategory;
 
-    if (products.length === 0) {
-      filter.title = { $regex: safeQ, $options: "i" };
-      products = await Product.find(filter)
+    const run = (match) =>
+      Product.find({ ...scope, ...match })
         .populate("brand", "name logo")
-        .select("title price image brand category")
+        .select("title price image brand category subCategory")
         .limit(30)
         .lean();
+
+    const startsWith = { $regex: "^" + safeQ, $options: "i" };
+    let products = await run({
+      $or: [{ title: startsWith }, { category: startsWith }, { subCategory: startsWith }],
+    });
+
+    if (products.length === 0) {
+      products = await run({ title: { $regex: safeQ, $options: "i" } });
     }
 
     res.json(products);
@@ -148,19 +162,45 @@ export const searchProducts = async (req, res) => {
 
 // lightweight autocomplete endpoint - no populate, tiny payload, capped results.
 // The search-as-you-type dropdown calls this instead of the heavier /search route.
+// Titles that start with the query come first, then titles that merely contain it.
+// Duplicate titles are collapsed so the dropdown never shows the same line twice.
 export const suggestProducts = async (req, res) => {
   try {
     const { q } = req.query;
     if (!q || q.trim().length < 2) return res.json([]);
 
-    const safeQ = q.trim().replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    const safeQ = escapeRegex(q.trim());
 
-    const suggestions = await Product.find(
+    const starts = await Product.find(
       { title: { $regex: "^" + safeQ, $options: "i" } },
       { title: 1 }
     )
-      .limit(6)
+      .limit(30)
       .lean();
+
+    let rows = starts;
+    if (starts.length < 6) {
+      const contains = await Product.find(
+        {
+          title: { $regex: safeQ, $options: "i" },
+          _id: { $nin: starts.map((r) => r._id) },
+        },
+        { title: 1 }
+      )
+        .limit(30)
+        .lean();
+      rows = starts.concat(contains);
+    }
+
+    const seen = new Set();
+    const suggestions = [];
+    for (const row of rows) {
+      const key = row.title.trim().toLowerCase();
+      if (seen.has(key)) continue;
+      seen.add(key);
+      suggestions.push(row);
+      if (suggestions.length === 6) break;
+    }
 
     res.json(suggestions);
   } catch (err) {

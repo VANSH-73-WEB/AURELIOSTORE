@@ -1,5 +1,5 @@
 import { useState ,useRef} from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./Components/Navbar";
 import Middle from "./Components/Middle";
@@ -12,6 +12,8 @@ import Register from "./Components/Register";
 import Orders from "./Components/Bottom/Orders";
 import Brands from "./Components/Brand";
 import SingleBrand from "./Components/SingleBrand";
+import Category from "./Components/Category";
+import CategoryStrip from "./Components/CategoryStrip";
 
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -21,11 +23,20 @@ const App = () => {
   const [cart, setCart] = useState([]);
   const [products, setProducts] = useState([]);
  const location = useLocation();
+  const navigate = useNavigate();
 const hideLayout = ["/", "/register"].includes(location.pathname);
   const searchInputRef = useRef(null);
 
+  // Navbar search icon. The search box only exists on /home, so from any other
+  // page go there first (Middle.jsx then focuses it); on /home just focus it.
   const focusSearch = () => {
-    searchInputRef.current?.focus();
+    if (location.pathname !== "/home") {
+      navigate("/home", { state: { focusSearch: true } });
+      return;
+    }
+    const input = searchInputRef.current;
+    input?.scrollIntoView({ behavior: "smooth", block: "center" });
+    input?.focus({ preventScroll: true });
   };
  return (
   <div className="min-h-screen flex flex-col">
@@ -42,6 +53,7 @@ const hideLayout = ["/", "/register"].includes(location.pathname);
           element={
             <>
               <Middle searchInputRef={searchInputRef} setProducts={setProducts}  />
+              <CategoryStrip />
               <Product  products={products}  cart={cart}  setCart={setCart}  />
             </>
           }
@@ -54,6 +66,8 @@ const hideLayout = ["/", "/register"].includes(location.pathname);
         <Route path="/orders" element={<Orders />} />
         <Route path="/brands" element={<Brands />} />
         <Route path="/brand/:id" element={<SingleBrand />} />
+        <Route path="/category/:categorySlug" element={<Category cart={cart} setCart={setCart} />} />
+        <Route path="/category/:categorySlug/:subSlug" element={<Category cart={cart} setCart={setCart} />} />
         <Route path="*" element={<Notfound />} />
       </Routes>
     </main>
