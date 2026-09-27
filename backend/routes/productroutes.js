@@ -7,13 +7,15 @@ import {
   updateProduct,
   deleteProduct,
   searchProducts,
-  suggestProducts
+  suggestProducts,
+  getPriceRange
 } from "../controllers/productController.js";
 
 const router = express.Router();
 //routes
 router.get("/suggest", suggestProducts);
 router.get("/search", searchProducts);
+router.get("/price-range", getPriceRange);
 router.get("/", getProducts);
 router.post("/create", createProduct);
 router.put("/:id", updateProduct);

@@ -30,12 +30,23 @@ export const createProduct = async (req, res) => {
 // - pagination stops us shipping/scanning the entire collection on every load
 export const getProducts = async (req, res) => {
   try {
-    const { brand, category, subCategory, page = 1, limit = 24 } = req.query;
+    const { brand, category, subCategory, minPrice, maxPrice, page = 1, limit = 24 } = req.query;
 
     let filter = {};
     if (brand) filter.brand = brand;
     if (category) filter.category = category;
     if (subCategory) filter.subCategory = subCategory;
+
+    // Price range slider: either bound is optional, and both are validated
+    // so a garbage query string can't turn into a bad Mongo query.
+    const min = minPrice !== undefined ? Number(minPrice) : undefined;
+    const max = maxPrice !== undefined ? Number(maxPrice) : undefined;
+    if (!Number.isNaN(min) || !Number.isNaN(max)) {
+      filter.price = {};
+      if (min !== undefined && !Number.isNaN(min)) filter.price.$gte = min;
+      if (max !== undefined && !Number.isNaN(max)) filter.price.$lte = max;
+      if (Object.keys(filter.price).length === 0) delete filter.price;
+    }
 
     const pageNum = Math.max(parseInt(page) || 1, 1);
     const limitNum = Math.min(parseInt(limit) || 24, 100); // hard cap to avoid abuse
@@ -58,6 +69,26 @@ export const getProducts = async (req, res) => {
       page: pageNum,
       pages: Math.ceil(total / limitNum),
     });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// min/max price for a section - lets the frontend slider size itself instead
+// of guessing bounds. Cheap: uses the same category/subCategory/price index.
+export const getPriceRange = async (req, res) => {
+  try {
+    const { category, subCategory } = req.query;
+    const match = {};
+    if (category) match.category = category;
+    if (subCategory) match.subCategory = subCategory;
+
+    const [result] = await Product.aggregate([
+      { $match: match },
+      { $group: { _id: null, min: { $min: "$price" }, max: { $max: "$price" } } },
+    ]);
+
+    res.json(result ? { min: result.min, max: result.max } : { min: 0, max: 0 });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -128,7 +159,7 @@ export const deleteProduct = async (req , res) =>{
 //      (e.g. "jeans" -> "Slim Fit Jeans").
 export const searchProducts = async (req, res) => {
   try {
-    const { q, brand, category, subCategory } = req.query;
+    const { q, brand, category, subCategory, minPrice, maxPrice } = req.query;
     if (!q || !q.trim()) return res.json([]);
 
     const safeQ = escapeRegex(q.trim());
@@ -137,6 +168,13 @@ export const searchProducts = async (req, res) => {
     if (brand) scope.brand = brand;
     if (category) scope.category = category;
     if (subCategory) scope.subCategory = subCategory;
+    const min = minPrice !== undefined ? Number(minPrice) : undefined;
+    const max = maxPrice !== undefined ? Number(maxPrice) : undefined;
+    if ((min !== undefined && !Number.isNaN(min)) || (max !== undefined && !Number.isNaN(max))) {
+      scope.price = {};
+      if (min !== undefined && !Number.isNaN(min)) scope.price.$gte = min;
+      if (max !== undefined && !Number.isNaN(max)) scope.price.$lte = max;
+    }
 
     const run = (match) =>
       Product.find({ ...scope, ...match })

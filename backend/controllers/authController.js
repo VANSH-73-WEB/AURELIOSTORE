@@ -21,7 +21,7 @@ export const registerUser = async (req, res) => {
       return res.status(400).json({ message: "Please fill all fields" });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({ email }).lean();
     if (existingUser) {
       return res.status(400).json({ message: "User already exists" });
     }
@@ -56,7 +56,7 @@ export const loginUser = async (req, res) => {
       return res.status(400).json({ message: "Please fill all fields" });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email }).lean();
 
     if (user && await bcrypt.compare(password, user.password)) {
       res.json({

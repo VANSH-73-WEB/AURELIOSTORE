@@ -13,7 +13,8 @@ const productSchema = new mongoose.Schema({
   },
   price: {
     type: Number,
-    required: true
+    required: true,
+    index: true
   },
   category: {
     type: String,
@@ -48,6 +49,6 @@ const productSchema = new mongoose.Schema({
 // Compound + text indexes so search/filter/list queries don't scan the whole collection
 productSchema.index({ title: "text", description: "text" });
 productSchema.index({ brand: 1, createdAt: -1 });
-productSchema.index({ category: 1, subCategory: 1 });
+productSchema.index({ category: 1, subCategory: 1, price: 1 });
 
 export default  mongoose.model("Product", productSchema);
