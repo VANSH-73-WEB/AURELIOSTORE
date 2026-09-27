@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" fill="#9d174d"/>
+  <g transform="translate(200,170)" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-60,20 L-60,-10 C-60,-25 -45,-40 -25,-45 L30,-55 L30,-30 L0,-15
+             L40,10 L40,30 L30,45 L15,45 L15,25 L-30,15 L-45,30 Z" />
+  </g>
+  <text x="200" y="330" font-family="Arial, sans-serif" font-size="26" fill="#ffffff" text-anchor="middle" opacity="0.92">Women's Footwear</text>
+</svg>

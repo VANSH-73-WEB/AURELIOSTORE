@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" fill="#b45309"/>
+  <g transform="translate(200,170)" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-45,-30 L-70,-8 L-45,15 L-30,4 L-30,60 L30,60 L30,4 L45,15 L70,-8 L45,-30 L22,-42
+             C22,-30 -22,-30 -22,-42 Z" transform="scale(0.9)"/>
+  </g>
+  <text x="200" y="330" font-family="Arial, sans-serif" font-size="26" fill="#ffffff" text-anchor="middle" opacity="0.92">Kids' Clothing</text>
+</svg>

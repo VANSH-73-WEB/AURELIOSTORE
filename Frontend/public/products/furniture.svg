@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" fill="#78350f"/>
+  <g transform="translate(200,170)" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M-80,20 L-80,-10 C-80,-25 -68,-35 -55,-35 L55,-35 C68,-35 80,-25 80,-10 L80,20" />
+           <path d="M-80,20 L-80,50 M80,20 L80,50 M-80,20 L80,20" />
+           <path d="M-65,-35 L-65,-10 M65,-35 L65,-10" />
+  </g>
+  <text x="200" y="330" font-family="Arial, sans-serif" font-size="26" fill="#ffffff" text-anchor="middle" opacity="0.92">Furniture</text>
+</svg>

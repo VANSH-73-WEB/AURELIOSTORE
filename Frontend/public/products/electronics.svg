@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <rect width="400" height="400" fill="#0f172a"/>
+  <g transform="translate(200,170)" fill="none" stroke="#ffffff" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="-60" y="-70" width="120" height="150" rx="10" />
+              <line x1="-30" y1="65" x2="30" y2="65" />
+              <circle cx="0" cy="50" r="4" fill="#ffffff" stroke="none" />
+  </g>
+  <text x="200" y="330" font-family="Arial, sans-serif" font-size="26" fill="#ffffff" text-anchor="middle" opacity="0.92">Electronics</text>
+</svg>

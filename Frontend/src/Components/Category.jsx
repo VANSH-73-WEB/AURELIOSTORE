@@ -40,11 +40,17 @@ const Category = ({ cart, setCart }) => {
         </nav>
 
         {/* Header */}
-        <div className="mt-4 rounded-2xl bg-blue-950 text-white px-6 md:px-10 py-8 md:py-10 flex items-center gap-5">
-          <span className="w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full bg-white/10 flex items-center justify-center text-3xl">
+        <div className="mt-4 rounded-2xl overflow-hidden relative text-white px-6 md:px-10 py-8 md:py-10 flex items-center gap-5 min-h-[140px]">
+          <img
+            src={sub?.image || category.image}
+            alt=""
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-blue-950/70" />
+          <span className="relative w-14 h-14 md:w-16 md:h-16 shrink-0 rounded-full bg-white/10 backdrop-blur flex items-center justify-center text-3xl">
             <i className={sub?.icon || category.icon} />
           </span>
-          <div>
+          <div className="relative">
             <h1 className="font-raleway text-2xl md:text-4xl font-light tracking-wide">{heading}</h1>
             <p className="text-white/70 text-sm mt-1">
               Browse our {category.name.toLowerCase()} collection

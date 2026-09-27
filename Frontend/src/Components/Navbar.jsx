@@ -62,7 +62,7 @@ const Navbar = ({ cart, focusSearch }) => {
               // pt-10 bridges the gap between the button and the panel so the
               // hover isn't lost while the mouse travels down to it
               <div className="absolute left-1/2 -translate-x-1/2 top-full pt-10 z-50">
-                <div className="bg-white text-gray-800 rounded-2xl shadow-2xl border border-gray-100 p-5 w-[400px] lg:w-[460px] grid grid-cols-2 gap-x-8 gap-y-5">
+                <div className="bg-white text-gray-800 rounded-2xl shadow-2xl border border-gray-100 p-5 w-[400px] lg:w-[460px] max-h-[70vh] overflow-y-auto grid grid-cols-2 gap-x-8 gap-y-5">
                   {CATEGORIES.map((cat) => (
                     <div key={cat.slug}>
                       <Link

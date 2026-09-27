@@ -68,10 +68,18 @@ const Cart = () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
+      // IMPORTANT: send just the product ID, not the whole populated product
+      // object from `cart` - the backend does Product.findById(item.product),
+      // which needs an ID string.
+      const items = cart.map((item) => ({
+        product: item.product._id,
+        quantity: item.quantity,
+      }));
+
       const res = await fetch(`${BASE_URL}/api/payment/order`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-        body: JSON.stringify({ items: cart }),
+        body: JSON.stringify({ items }),
       });
 
       const data = await res.json();
@@ -91,7 +99,7 @@ const Cart = () => {
           const verifyRes = await fetch(`${BASE_URL}/api/payment/verify`, {
             method: "POST",
             headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-            body: JSON.stringify(response),
+            body: JSON.stringify({ ...response, items, fromCart: true }),
           });
           const verifyData = await verifyRes.json();
           if (verifyData.success) {
