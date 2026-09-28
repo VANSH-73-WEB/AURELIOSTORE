@@ -37,9 +37,19 @@ export const getCart = async (req, res) => {
     const cart = await Cart.findOne({ user: userId })
       .populate("products.product");
 
-    res.json({
-      products: cart?.products || []
-    });
+    if (!cart) return res.json({ products: [] });
+
+    // A product can disappear after the cart was saved (deleted, or the DB was
+    // re-seeded with `node products.js`, which gives every product a new _id).
+    // populate() then returns null for that line. Drop those lines so the
+    // client never receives a null product, and clean them out of the DB.
+    const valid = cart.products.filter((p) => p.product);
+    if (valid.length !== cart.products.length) {
+      cart.products = valid;
+      await cart.save();
+    }
+
+    res.json({ products: valid });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

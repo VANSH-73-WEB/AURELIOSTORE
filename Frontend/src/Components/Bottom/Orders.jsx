@@ -89,24 +89,32 @@ const Orders = () => {
 
               {/* Products */}
               <div className="px-6 py-4 divide-y divide-gray-50">
-                {order.products.map((item) => (
+                {order.products.map((item) => {
+                  // Prefer live product data, fall back to the snapshot saved
+                  // with the order (older orders may have neither title nor
+                  // image if their product was deleted).
+                  const title = item.product?.title || item.title || "Product no longer available";
+                  const image = item.product?.image || item.image;
+                  const price = item.price ?? item.product?.price ?? 0;
+                  return (
                   <div key={item._id} className="flex items-center gap-4 py-3">
                     <img
-                      src={item.product?.image}
-                      alt={item.product?.title}
+                      src={image}
+                      alt={title}
                       className="w-14 h-14 rounded-xl object-cover bg-gray-100 shrink-0"
                     />
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-sm text-gray-800 line-clamp-1">{item.product?.title}</p>
+                      <p className="font-medium text-sm text-gray-800 line-clamp-1">{title}</p>
                       <p className="text-xs text-gray-400 mt-0.5">
-                        ₹{item.product?.price?.toLocaleString("en-IN")} × {item.quantity}
+                        ₹{price.toLocaleString("en-IN")} × {item.quantity}
                       </p>
                     </div>
                     <p className="font-semibold text-sm text-gray-800 shrink-0">
-                      ₹{(item.product?.price * item.quantity)?.toLocaleString("en-IN")}
+                      ₹{(price * item.quantity).toLocaleString("en-IN")}
                     </p>
                   </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           ))}

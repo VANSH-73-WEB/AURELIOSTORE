@@ -22,6 +22,14 @@ const orderSchema = new mongoose.Schema(
         // even if the product's price changes later.
         price: {
           type: Number
+        },
+        // Snapshots so order history still renders if the product is later
+        // deleted or the catalogue is re-seeded.
+        title: {
+          type: String
+        },
+        image: {
+          type: String
         }
       }
     ],

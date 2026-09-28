@@ -21,7 +21,8 @@ const Cart = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
-      setCart(data.products || []);
+      // Ignore lines whose product no longer exists (populate gives null).
+      setCart((data.products || []).filter((item) => item && item.product));
     } catch (err) {
       console.error(err);
       toast.error("Could not load cart.");

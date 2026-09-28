@@ -93,9 +93,15 @@ export const verifyPayment = async (req, res) => {
       // happens to be in the cart right now.
       orderProducts = await Promise.all(
         items.map(async (item) => {
-          const product = await Product.findById(item.product).select("price").lean();
+          const product = await Product.findById(item.product).select("price title image").lean();
           if (!product) throw new Error("Product not found");
-          return { product: item.product, quantity: item.quantity || 1, price: product.price };
+          return {
+            product: item.product,
+            quantity: item.quantity || 1,
+            price: product.price,
+            title: product.title,
+            image: product.image,
+          };
         })
       );
       total = orderProducts.reduce((acc, i) => acc + i.price * i.quantity, 0);
@@ -120,6 +126,8 @@ export const verifyPayment = async (req, res) => {
         product: item.product._id,
         quantity: item.quantity,
         price: item.product.price,
+        title: item.product.title,
+        image: item.product.image,
       }));
       total = orderProducts.reduce((acc, i) => acc + i.price * i.quantity, 0);
 
