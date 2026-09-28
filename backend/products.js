@@ -214,6 +214,7 @@ import Brand from "./models/Brand.js";
 
 import dotenv from "dotenv";
 import path from "path";
+import fs from "fs";
 import { fileURLToPath } from "url";
 
 dotenv.config();
@@ -233,7 +234,7 @@ export const brands = [
   },
   {
     name: "HomeLine",
-    logo: "https://via.placeholder.com/150?text=HomeLine",
+    logo: "/products/placeholder.svg",
     description: "Furniture and home essentials",
   },
   {
@@ -241,11 +242,11 @@ export const brands = [
     logo: "/products/brand-aurelio-wear.svg",
     description: "Everyday clothing for men, women and kids",
   },
-  { name: "Aurelio Beauty", logo: "https://via.placeholder.com/150?text=Beauty", description: "Skincare, makeup and grooming" },
-  { name: "Aurelio Scents", logo: "https://via.placeholder.com/150?text=Scents", description: "Perfumes, colognes and body sprays" },
-  { name: "Aurelio Fit", logo: "https://via.placeholder.com/150?text=Fit", description: "Sports and fitness gear" },
-  { name: "PageTurn", logo: "https://via.placeholder.com/150?text=PageTurn", description: "Books and stationery" },
-  { name: "Playhouse", logo: "https://via.placeholder.com/150?text=Playhouse", description: "Toys and games for all ages" },
+  { name: "Aurelio Beauty", logo: "/products/placeholder.svg", description: "Skincare, makeup and grooming" },
+  { name: "Aurelio Scents", logo: "/products/placeholder.svg", description: "Perfumes, colognes and body sprays" },
+  { name: "Aurelio Fit", logo: "/products/placeholder.svg", description: "Sports and fitness gear" },
+  { name: "PageTurn", logo: "/products/placeholder.svg", description: "Books and stationery" },
+  { name: "Playhouse", logo: "/products/placeholder.svg", description: "Toys and games for all ages" },
   {
     name: "Stride",
     logo: "/products/brand-stride.svg",
@@ -407,7 +408,7 @@ const newProducts = [
 
 export const products = [
   {
-    title: "Headphones",
+    title: "Headphones Classic",
     description: "High quality headphones",
     price: 120,
     category: "Electronics",
@@ -417,7 +418,7 @@ export const products = [
     brandName: "Aurelio Essentials",
   },
   {
-    title: "Headphones",
+    title: "Headphones Studio",
     description: "Premium sound headphones",
     price: 120,
     category: "Electronics",
@@ -427,7 +428,7 @@ export const products = [
     brandName: "Aurelio Essentials",
   },
   {
-    title: "Headphones",
+    title: "Headphones Wireless",
     description: "Wireless headphones",
     price: 120,
     category: "Electronics",
@@ -437,7 +438,7 @@ export const products = [
     brandName: "Aurelio Essentials",
   },
   {
-    title: "Headphones",
+    title: "Headphones Stylish",
     description: "Stylish headphones",
     price: 120,
     category: "Electronics",
@@ -447,7 +448,7 @@ export const products = [
     brandName: "Aurelio Essentials",
   },
   {
-    title: "Headphones",
+    title: "Headphones Comfort",
     description: "Comfortable headphones",
     price: 120,
     category: "Electronics",
@@ -555,7 +556,7 @@ export const products = [
     description: "Protective motorcycle jacket",
     price: 120,
     category: "Automobile",
-    image: "https://i.pinimg.com/736x/44/0c/b5/440cb51bf85d5a231584f37310048cea.jpg",
+    image: img.automobile,
     stock: 9,
     brandName: "TrailGear",
   },
@@ -613,8 +614,21 @@ export const products = [
 const slugify = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 const itemImage = (p) =>
   p.image.startsWith("https://images.unsplash.com") || p.image.includes("via.placeholder.com")
-    ? `/products/items/${slugify(p.title)}.svg`
+    ? "/products/placeholder.svg"
     : p.image;
+
+// Your own downloaded photos: drop a file named after the product slug into
+// Frontend/public/products/items/ (e.g. slim-fit-denim-jeans.jpg) and the seed
+// uses it automatically. Priority: PIN link > local file > matched photo > illustration.
+const ITEMS_DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "../Frontend/public/products/items");
+const localImage = (title) => {
+  for (const ext of ["jpg", "jpeg", "png", "webp", "avif"]) {
+    if (fs.existsSync(path.join(ITEMS_DIR, `${slugify(title)}.${ext}`))) {
+      return `/products/items/${slugify(title)}.${ext}`;
+    }
+  }
+  return null;
+};
 
 // ---------------------------------------------------------------------------
 // Real product photos, matched by name.
@@ -660,7 +674,7 @@ const RULES = [
   { re: /helmet/, cats: ["motorcycle"], words: ["helmet"] },
 ];
 
-async function fetchRealImages(list) {
+export async function fetchRealImages(list) {
   const result = {};
   try {
     if (typeof fetch !== "function") throw new Error("global fetch needs Node 18+");
@@ -700,6 +714,11 @@ async function fetchRealImages(list) {
 // Anything left as "" keeps its default stock photo.
 // ---------------------------------------------------------------------------
 export const PIN = {
+  "Headphones Classic": "",
+  "Headphones Studio": "",
+  "Headphones Wireless": "",
+  "Headphones Stylish": "",
+  "Headphones Comfort": "",
   "Slim Fit Denim Jeans": "",
   "Cotton Casual Shirt": "",
   "Classic Polo T-Shirt": "",
@@ -821,7 +840,7 @@ const seedDatabase = async () => {
 
     const productsWithBrand = products.map(({ brandName, ...p }, i) => ({
       ...p,
-      image: PIN[p.title] || realImages[i] || itemImage(p),
+      image: PIN[p.title] || localImage(p.title) || realImages[i] || itemImage(p),
       brand: brandIdByName[brandName],
     }));
 
