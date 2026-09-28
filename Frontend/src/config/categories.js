@@ -31,6 +31,7 @@ export const CATEGORIES = [
   { slug: "sports", name: "Sports & Fitness", icon: "ri-boxing-line", image: img("photo-1589579234096-25cb6b83e021"), subCategories: [] },
   { slug: "books", name: "Books & Stationery", icon: "ri-book-2-line", image: img("photo-1630852722128-db210d1b62a7"), subCategories: [] },
   { slug: "toys", name: "Toys & Games", icon: "ri-gamepad-line", image: img("photo-1516981879613-9f5da904015f"), subCategories: [] },
+  { slug: "kitchen", name: "Kitchen & Dining", icon: "ri-knife-line", image: img("photo-1556911220-e15b29be8c8f"), subCategories: [] },
 ];
 
 // Quick-access tiles shown under the search bar on the home page.
@@ -49,6 +50,7 @@ export const HOME_TILES = [
   { label: "Sports", icon: "ri-boxing-line", image: CATEGORIES[9].image, to: "/category/sports" },
   { label: "Books", icon: "ri-book-2-line", image: CATEGORIES[10].image, to: "/category/books" },
   { label: "Toys", icon: "ri-gamepad-line", image: CATEGORIES[11].image, to: "/category/toys" },
+  { label: "Kitchen", icon: "ri-knife-line", image: CATEGORIES[12].image, to: "/category/kitchen" },
 ];
 
 export const findCategory = (slug) => CATEGORIES.find((c) => c.slug === slug);

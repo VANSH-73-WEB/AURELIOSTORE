@@ -93,9 +93,9 @@ const Product = ({
     if (isSearching) return; // search results are already a small, complete list
 
     let ignore = false;
-    setLoadingProducts(true);
 
     const timeout = setTimeout(() => {
+      setLoadingProducts(true);
       const params = new URLSearchParams({ page: currentPage, limit: PRODUCTS_PER_PAGE });
       if (category) params.set("category", category);
       if (subCategory) params.set("subCategory", subCategory);
@@ -162,35 +162,6 @@ const Product = ({
     }
   };
 
-  if (loadingProducts && !isSearching) {
-    return (
-      <section className="px-6 md:px-16 xl:px-20 py-10">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {Array.from({ length: PRODUCTS_PER_PAGE }).map((_, i) => (
-            <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
-              <div className="h-56 bg-gray-100" />
-              <div className="p-4 space-y-2">
-                <div className="h-4 bg-gray-100 rounded w-3/4" />
-                <div className="h-4 bg-gray-100 rounded w-1/2" />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  if (products.length === 0) {
-    return (
-      <section className="px-6 md:px-20 py-16 text-center">
-        <div className="flex flex-col items-center gap-3 text-gray-400">
-          <i className="ri-store-2-line text-5xl" />
-          <p className="text-lg">{emptyMessage}</p>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section className="px-6 md:px-16 xl:px-20 py-10">
       {/* Section Header */}
@@ -210,6 +181,28 @@ const Product = ({
         <PriceSlider bounds={bounds} range={range} onChange={setRange} />
       )}
 
+      {/* Grid area: only this part swaps for skeleton/empty - the slider above stays mounted */}
+      {loadingProducts && !isSearching ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {Array.from({ length: PRODUCTS_PER_PAGE }).map((_, i) => (
+            <div key={i} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 animate-pulse">
+              <div className="h-56 bg-gray-100" />
+              <div className="p-4 space-y-2">
+                <div className="h-4 bg-gray-100 rounded w-3/4" />
+                <div className="h-4 bg-gray-100 rounded w-1/2" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : products.length === 0 ? (
+        <div className="py-16 text-center">
+          <div className="flex flex-col items-center gap-3 text-gray-400">
+            <i className="ri-store-2-line text-5xl" />
+            <p className="text-lg">{emptyMessage}</p>
+          </div>
+        </div>
+      ) : (
+        <>
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
         {products.map((item) => (
@@ -348,6 +341,8 @@ const Product = ({
           </button>
         </div>
       )}
+        </>
+      )}
       {quickView && (
         <QuickViewModal
           product={quickView}
@@ -363,6 +358,39 @@ const Product = ({
   );
 };
 
+// Text-style number box that keeps its own draft while you type (so clearing
+// the field or typing multi-digit prices isn't fought by the slider clamp),
+// and only commits to the filter on Enter / blur.
+const PriceInput = ({ label, value, onCommit }) => {
+  const [draft, setDraft] = useState(String(value));
+  const [focused, setFocused] = useState(false);
+
+  useEffect(() => {
+    if (!focused) setDraft(String(value));
+  }, [value, focused]);
+
+  const commit = () => {
+    if (draft.trim() === "") { setDraft(String(value)); return; }
+    onCommit(draft);
+  };
+
+  return (
+    <label className="flex-1 text-xs text-gray-500">
+      {label}
+      <input
+        type="text"
+        inputMode="numeric"
+        value={draft}
+        onFocus={() => setFocused(true)}
+        onChange={(e) => setDraft(e.target.value.replace(/[^\d]/g, ""))}
+        onBlur={() => { setFocused(false); commit(); }}
+        onKeyDown={(e) => { if (e.key === "Enter") e.currentTarget.blur(); }}
+        className="mt-1 w-full border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-gray-700 outline-none focus:border-blue-950 transition"
+      />
+    </label>
+  );
+};
+
 // Dual-handle price slider: two native <input type="range"> stacked on top of
 // each other (a common CSS-only way to get a min/max slider without a
 // library). Each thumb is only clickable over its own pointer-events area,
@@ -374,13 +402,25 @@ const PriceSlider = ({ bounds, range, onChange }) => {
   const rightPct = ((range.max - min) / span) * 100;
 
   const setMin = (v) => {
-    const next = Math.min(Number(v), range.max);
+    const n = Number(v);
+    if (Number.isNaN(n)) return;
+    const next = Math.min(Math.max(n, min), range.max);
     onChange({ ...range, min: next });
   };
   const setMax = (v) => {
-    const next = Math.max(Number(v), range.min);
+    const n = Number(v);
+    if (Number.isNaN(n)) return;
+    const next = Math.max(Math.min(n, max), range.min);
     onChange({ ...range, max: next });
   };
+
+  // The two <input type="range"> thumbs are stacked on the same track, and
+  // whichever renders second sits on top and can "shadow" the other thumb
+  // when they're close together (or equal), making the min handle hard or
+  // impossible to grab. Bumping the min-thumb's stacking order once it's
+  // past the midpoint keeps whichever handle is nearer the crowded side on
+  // top, so both stay reliably draggable at every position.
+  const minOnTop = leftPct > 50;
 
   return (
     <section className="px-6 md:px-16 xl:px-20 pt-2 pb-6">
@@ -408,6 +448,7 @@ const PriceSlider = ({ bounds, range, onChange }) => {
             max={max}
             value={range.min}
             onChange={(e) => setMin(e.target.value)}
+            style={{ zIndex: minOnTop ? 3 : 2 }}
             className="absolute inset-x-0 w-full appearance-none bg-transparent pointer-events-none accent-blue-950 [&::-webkit-slider-thumb]:pointer-events-auto [&::-moz-range-thumb]:pointer-events-auto"
             aria-label="Minimum price"
           />
@@ -417,6 +458,7 @@ const PriceSlider = ({ bounds, range, onChange }) => {
             max={max}
             value={range.max}
             onChange={(e) => setMax(e.target.value)}
+            style={{ zIndex: minOnTop ? 2 : 3 }}
             className="absolute inset-x-0 w-full appearance-none bg-transparent pointer-events-none accent-blue-950 [&::-webkit-slider-thumb]:pointer-events-auto [&::-moz-range-thumb]:pointer-events-auto"
             aria-label="Maximum price"
           />
@@ -425,6 +467,13 @@ const PriceSlider = ({ bounds, range, onChange }) => {
         <div className="flex justify-between text-xs text-gray-400 mt-2">
           <span>₹{min.toLocaleString("en-IN")}</span>
           <span>₹{max.toLocaleString("en-IN")}</span>
+        </div>
+
+        {/* Numeric inputs - type a price, press Enter or click away to apply */}
+        <div className="flex items-center gap-3 mt-4">
+          <PriceInput label="Min" value={range.min} onCommit={setMin} />
+          <span className="text-gray-300 mt-4">–</span>
+          <PriceInput label="Max" value={range.max} onCommit={setMax} />
         </div>
       </div>
     </section>
@@ -453,7 +502,15 @@ const QuickViewModal = ({ product, loading, onClose, onAddToCart, onBuyNow, addi
         </button>
 
         <div className="bg-gray-50 h-64 md:h-full">
-          <img src={product.image} alt={product.title} className="w-full h-full object-cover" />
+          <img
+            src={product.image}
+            alt={product.title}
+            className="w-full h-full object-cover"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = "/products/placeholder.svg";
+            }}
+          />
         </div>
 
         <div className="p-6 md:p-8 flex flex-col">

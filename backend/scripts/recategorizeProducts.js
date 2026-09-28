@@ -26,6 +26,7 @@ const RULES = [
   { keywords: ["smartwatch", "fitness band", "fitbit"], category: "Wearables" },
   { keywords: ["sofa", "chair", "table", "bed frame", "wardrobe", "mattress"], category: "Furniture" },
   { keywords: ["sneaker", "sandal", "boot", "loafer", "heels", "flip-flop"], category: "Footwear" },
+  { keywords: ["utensil", "cutlery", "spatula", "frying pan", "cookware", "pressure cooker", "dinner set", "storage jar", "chef's knife", "knife set"], category: "Kitchen & Dining" },
   { keywords: ["phone holder", "phone stand", "laptop stand", "wallet", "belt", "sunglasses", "cap", "handbag", "backpack"], category: "Accessories" },
 ];
 
